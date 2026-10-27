@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>约舞吧 · 舞团招募平台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235B7CFF'/%3E%3Cstop offset='1' stop-color='%23F78BC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M22 40V24a4 4 0 0 1 6-3.5l12 7.5a4 4 0 0 1 0 7l-12 7.5A4 4 0 0 1 22 40z' fill='white'/%3E%3Cpath d='M22 26a10 4 0 0 1 20 0' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#5B7CFF; --blue-deep:#3D5AF5; --blue-soft:#E7EDFF;
+  --pink:#F78BC0; --pink-deep:#F05BA8; --pink-soft:#FFE9F4;
+  --ink:#20264A; --ink-2:#5A6184; --ink-3:#9AA1BF;
+  --bg:#F5F7FF; --card:#FFFFFF; --line:#E9ECFF;
+  --ok:#2FB57D; --warn:#F5A623; --danger:#E53E3E;
+  --radius:20px; --shadow:0 10px 30px rgba(63,86,255,.08);
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans SC',system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+.disp{font-family:'ZCOOL KuaiLe','Noto Sans SC',sans-serif}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:16px;color:var(--ink)}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.hidden{display:none!important}
+
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(255,255,255,.82);border-bottom:1px solid var(--line)}
+.nav .inner{max-width:var(--maxw);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.brand .logo{width:40px;height:40px;flex:0 0 auto}
+.brand .name{font-size:26px;line-height:1;color:var(--ink);letter-spacing:.5px}
+.brand .name b{background:linear-gradient(90deg,var(--blue),var(--pink-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
+.nav .spacer{flex:1}
+.nav .actions{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:14px;font-weight:700;font-size:15px;transition:.18s;white-space:nowrap}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 6px 16px rgba(91,124,255,.28)}
+.btn-blue:hover{background:var(--blue-deep)}
+.btn-pink{background:linear-gradient(135deg,var(--pink),var(--pink-deep));color:#fff;box-shadow:0 6px 16px rgba(240,91,168,.26)}
+.btn-pink:hover{filter:brightness(1.05)}
+.btn-ghost{background:#fff;color:var(--blue-deep);border:1.5px solid var(--blue)}
+.btn-ghost:hover{background:var(--blue-soft)}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:11px}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#C53030}
+.icon-btn{width:42px;height:42px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1.5px solid var(--line);color:var(--ink-2)}
+.icon-btn:hover{border-color:var(--blue);color:var(--blue-deep)}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(150deg,#EAF0FF 0%,#F5F8FF 45%,#FFECF6 100%)}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(40px);opacity:.6;pointer-events:none}
+.hero::before{width:420px;height:420px;background:rgba(91,124,255,.18);top:-140px;right:6%}
+.hero::after{width:380px;height:380px;background:rgba(240,91,168,.16);bottom:-120px;left:4%}
+.hero .inner{max-width:var(--maxw);margin:0 auto;padding:56px 20px 64px;display:grid;grid-template-columns:1fr;gap:36px;position:relative;z-index:2}
+.hero-copy .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;color:var(--blue-deep);font-weight:600}
+.hero-copy h1{font-size:44px;line-height:1.12;margin:18px 0 14px}
+.hero-copy h1 .g1{background:linear-gradient(90deg,var(--blue-deep),var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-copy h1 .g2{background:linear-gradient(90deg,var(--pink-deep),var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-copy p.sub{font-size:16px;color:var(--ink-2);max-width:520px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px}
+.stat b{font-size:26px;display:block;line-height:1;font-weight:900}
+.stat span{font-size:12.5px;color:var(--ink-3)}
+.hero-visual{position:relative}
+.hero-visual .frame{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:4px solid #fff}
+.hero-visual .frame img{width:100%;height:400px;object-fit:cover}
+.float-card{position:absolute;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700}
+.float-card .dot{width:10px;height:10px;border-radius:50%}
+.float-card.c1{top:-14px;left:-8px;color:var(--blue-deep)}
+.float-card.c1 .dot{background:var(--blue)}
+.float-card.c2{bottom:18px;right:-6px;color:var(--pink-deep)}
+.float-card.c2 .dot{background:var(--pink)}
+
+.sec{padding:46px 0 8px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.sec-head h2{font-size:26px}
+.sec-head .sub{color:var(--ink-3);font-size:14px}
+.sec-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-size:13px;color:var(--ink-2);font-weight:600;transition:.15s}
+.chip.on{background:var(--blue-soft);border-color:var(--blue);color:var(--blue-deep)}
+.cnt{min-width:20px;height:20px;border-radius:999px;background:var(--pink-deep);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+
+/* ===== 筛选面板 ===== */
+.filter-fab{position:fixed;z-index:60;right:18px;bottom:20px;box-shadow:0 10px 28px rgba(240,91,168,.4)}
+.filter-fab .cnt{position:absolute;top:-6px;right:-6px}
+.scrim{position:fixed;inset:0;background:rgba(32,38,74,.45);z-index:70;opacity:0;pointer-events:none;transition:.2s}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:80;background:#fff;transition:.28s;display:flex;flex-direction:column;top:0;right:0;bottom:0;width:min(400px,92vw);transform:translateX(105%);box-shadow:-20px 0 50px rgba(32,38,74,.14)}
+.sheet.open{transform:none}
+@media(max-width:819px){
+  .sheet{left:0;right:0;top:auto;bottom:0;width:auto;max-height:88vh;transform:translateY(105%);border-radius:22px 22px 0 0;box-shadow:0 -20px 50px rgba(32,38,74,.14)}
+}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.sheet-head h3{font-size:19px}
+.sheet-body{flex:1;overflow-y:auto;padding:6px 20px 20px}
+.sheet-foot{padding:14px 20px 20px;border-top:1px solid var(--line);display:flex;gap:12px}
+.sheet-foot .btn{flex:1}
+.fgroup{margin-top:18px}
+.fgroup>label{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;margin-bottom:10px}
+.fgroup>label svg{width:16px;height:16px;color:var(--pink-deep)}
+.fgroup .hint{font-size:11.5px;color:var(--ink-3);font-weight:500}
+.cset{display:flex;flex-wrap:wrap;gap:8px}
+.cset .chip{user-select:none}
+.range-row{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;accent-color:var(--blue);height:6px}
+.range-val{min-width:70px;text-align:right;font-weight:700;color:var(--blue-deep);font-size:14px}
+.switch{position:relative;width:48px;height:27px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.switch .slider{position:absolute;inset:0;background:#E3E7FF;border-radius:99px;transition:.2s;cursor:pointer}
+.switch .slider::before{content:"";position:absolute;width:21px;height:21px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.switch input:checked+.slider{background:var(--blue)}
+.switch input:checked+.slider::before{transform:translateX(21px)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line)}
+.toggle-row .tlabel{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
+.toggle-row:last-child{border-bottom:none}
+
+.grid{display:grid;grid-template-columns:1fr;gap:20px}
+.group-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:.22s;position:relative}
+.group-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(63,86,255,.14);border-color:#C9D6FF}
+.g-top{height:72px;background:linear-gradient(135deg,var(--ca),var(--cb));padding:14px 16px;color:#fff;display:flex;align-items:center;gap:10px}
+.g-top .type-tag{background:rgba(255,255,255,.92);color:var(--blue-deep);display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:700}
+.g-top-name{font-weight:800;font-size:17px;flex:1;line-height:1.25}
+.g-new2{background:rgba(255,255,255,.92);color:var(--pink-deep);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.g-body{padding:16px}
+.g-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.g-曲目{color:var(--ink-3);font-size:12.5px;margin-bottom:10px}
+.g-meta{display:flex;flex-direction:column;gap:7px}
+.g-meta .row{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2)}
+.g-meta svg{width:16px;height:16px;color:var(--blue);flex:0 0 auto}
+.g-progress{display:flex;align-items:center;gap:9px;margin-top:11px}
+.g-progress .track{flex:1;height:7px;background:#EDF0FF;border-radius:99px;overflow:hidden}
+.g-progress .fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--pink));border-radius:99px}
+.g-progress .num{font-size:12px;color:var(--ink-2);font-weight:600;white-space:nowrap}
+
+.empty{text-align:center;padding:70px 20px;color:var(--ink-3)}
+.empty svg{width:80px;height:80px;margin:0 auto 18px;opacity:.6}
+.empty h3{color:var(--ink);font-size:20px;margin-bottom:6px}
+.empty .btn{margin-top:18px}
+
+.tag-sec{margin-bottom:34px}
+.tag-sec .ts-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.tag-sec .ts-name{font-size:20px;font-weight:900}
+.tag-sec .ts-sub{font-size:12.5px;color:var(--ink-3)}
+.tag-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.tag-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:.2s;position:relative;display:block;width:100%}
+.tag-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#C9D6FF}
+.tag-card.on{border-color:var(--pink);box-shadow:0 10px 26px rgba(240,91,168,.22)}
+.tag-card .tc-cover{position:relative;aspect-ratio:16/9;overflow:hidden;background:linear-gradient(135deg,var(--blue-soft),var(--pink-soft))}
+.tag-card .tc-cover img{width:100%;height:100%;object-fit:cover}
+.tag-card .tc-cover .tc-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-3)}
+.tag-card .tc-cover .tc-fb svg{width:30px;height:30px;opacity:.5}
+.tag-card .tc-chk{position:absolute;top:10px;right:10px;z-index:2;width:26px;height:26px;border-radius:50%;background:var(--pink-deep);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.tag-card .tc-body{padding:12px 14px}
+.tag-card .tc-body .g-name{font-size:17px;font-weight:900}
+.tag-card .tc-body .tc-count{font-size:12px;color:var(--ink-3);margin-top:3px}
+.ct-chip{display:inline-flex;align-items:center;gap:5px;background:var(--blue-soft);color:var(--blue-deep);border:1px solid var(--blue);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700}
+
+.back-bar{max-width:var(--maxw);margin:0 auto;padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between}
+.back-btn{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--ink-2);padding:8px 12px;border-radius:11px}
+.back-btn:hover{background:#fff;color:var(--blue-deep)}
+.group-hero{max-width:var(--maxw);margin:20px auto 0;padding:0 20px}
+.group-hero .frame{border-radius:var(--radius);overflow:hidden;border:4px solid #fff;box-shadow:var(--shadow);position:relative}
+.g-band{height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--ca),var(--cb));color:rgba(255,255,255,.95);position:relative}
+.g-band svg{width:56px;height:56px;opacity:.85}
+.g-hero-tags{position:absolute;left:20px;bottom:20px;z-index:2;display:flex;gap:8px;flex-wrap:wrap}
+.g-hero-tags .pill{background:rgba(255,255,255,.9);box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.group-title{position:relative;max-width:var(--maxw);margin:-56px auto 0;padding:0 20px;z-index:3}
+.group-title h1{font-size:26px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.g-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.g-main{max-width:var(--maxw);margin:30px auto 0;padding:0 20px 60px;display:grid;grid-template-columns:1fr;gap:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card h3{font-size:18px;display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.card h3 svg{width:19px;height:19px;color:var(--pink-deep)}
+.kv{display:grid;grid-template-columns:1fr;gap:12px}
+.kv .item{display:flex;gap:12px;padding:12px 14px;background:#FAFBFF;border-radius:13px}
+.kv .item .k{font-size:12px;color:var(--ink-3);width:74px;flex:0 0 auto}
+.kv .item .v{font-size:14px;font-weight:600}
+.recruit-list{display:flex;flex-direction:column;gap:10px}
+.recruit-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#FAFBFF;border-radius:13px;border:1px solid transparent}
+.recruit-item.done{background:#F2FAF6;border-color:#D6F0E4}
+.recruit-item .ri-name{font-weight:700;font-size:14px;display:flex;align-items:center;gap:7px;flex:1;min-width:0}
+.recruit-item .ri-name .ic{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;background:var(--pink-soft);color:var(--pink-deep)}
+.recruit-item .ri-status{font-size:12px;font-weight:700}
+.st-open{color:var(--blue-deep);background:var(--blue-soft);padding:3px 9px;border-radius:999px}
+.st-done{color:var(--ok);background:#E3F5ED;padding:3px 9px;border-radius:999px}
+.st-applied{color:var(--warn);background:#FFF3DF;padding:3px 9px;border-radius:999px}
+.ri-act{flex:0 0 auto}
+.leader-block{display:flex;flex-direction:column;gap:12px}
+.leader-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.leader-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;background:#FAFBFF;border:1.5px dashed var(--blue);border-radius:13px;font-size:14px;font-weight:700;color:var(--blue-deep)}
+.works-list{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.work-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#FAFBFF;border-radius:11px;font-size:13.5px}
+.work-item svg{width:16px;height:16px;color:var(--pink-deep);flex:0 0 auto}
+.contact-cta{margin-top:18px;width:100%}
+.note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+.applied-note{display:flex;align-items:center;gap:8px;background:#FFF3DF;color:#B97A10;font-size:13px;padding:11px 14px;border-radius:12px;margin-top:10px;font-weight:600}
+.opt-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.opt-item{background:#FAFBFF;border-radius:13px;padding:12px 14px}
+.opt-item .k{font-size:12px;color:var(--ink-3);margin-bottom:4px}
+.opt-item .v{font-size:14px;font-weight:600}
+.leader-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+.msg-form{display:flex;flex-direction:column;gap:12px}
+.msg-form textarea{width:100%;min-height:96px;padding:13px 14px;border:1.5px solid var(--line);border-radius:13px;outline:none;resize:vertical;background:#FAFBFF}
+.msg-form textarea:focus{border-color:var(--blue);background:#fff}
+.msg-list{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.msg-item{display:flex;gap:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:13px}
+.msg-item .ava{width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.msg-item .mc{flex:1}
+.msg-item .who{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.msg-item .who .time{color:var(--ink-3);font-weight:500;font-size:11.5px}
+.msg-item .txt{font-size:14px;color:var(--ink-2);margin-top:3px}
+
+.create{max-width:760px;margin:0 auto;padding:0 20px 70px}
+.create .head{padding:26px 0 6px;text-align:center}
+.create .head h1{font-size:30px}
+.create .head p{color:var(--ink-3);font-size:14px;margin-top:6px}
+.form-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:18px}
+.form-card h3{font-size:17px;display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.form-card h3 .n{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+.f-label{display:block;font-weight:700;font-size:13.5px;margin:14px 0 8px}
+.f-label small{color:var(--ink-3);font-weight:500}
+.f-label .req{color:var(--pink-deep)}
+.f-label:first-child{margin-top:0}
+.f-field input,.f-field select,.f-field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;outline:none;background:#FAFBFF;min-width:0;box-sizing:border-box}
+.f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--blue);background:#fff}
+.finput{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;outline:none;transition:.15s;background:#FAFBFF;min-width:0;box-sizing:border-box}
+.finput:focus{border-color:var(--blue);background:#fff}
+.tag-sel{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tag-sel .pill{background:var(--pink-soft);border-color:var(--pink);color:var(--pink-deep)}
+.tag-sel .pill .x{cursor:pointer;opacity:.7;margin-left:3px}
+.add-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.add-row input{flex:1 1 0;min-width:0;padding:10px 13px;border:1.5px solid var(--line);border-radius:12px;outline:none}
+.add-row input:focus{border-color:var(--blue)}
+.submit-wrap{margin-top:22px}
+.form-tip{font-size:12px;color:var(--ink-3);margin-top:12px;text-align:center}
+.err-tip{background:#FFECEC;color:#C62828;font-size:13px;font-weight:600;padding:11px 14px;border-radius:12px;margin-top:12px;display:none}
+
+.admin-fab{position:fixed;top:14px;right:14px;z-index:45;background:rgba(255,255,255,.92);border:1.5px solid var(--line);color:var(--ink-2);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.08);display:inline-flex;align-items:center;gap:6px}
+.admin-fab:hover{border-color:var(--blue);color:var(--blue-deep)}
+.admin{max-width:680px;margin:0 auto;padding:18px 16px 60px}
+.admin .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.admin .head h1{font-size:22px}
+.admin-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.admin-card h3{font-size:15.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.arow{display:flex;align-items:center;gap:10px;padding:12px;border-radius:13px;background:#FAFBFF;margin-bottom:8px;flex-wrap:wrap}
+.arow .an{font-weight:700;flex:1;min-width:150px}
+.arow .at{font-size:12px;color:var(--ink-3);width:100%}
+.arow .acts{display:flex;gap:6px;flex-wrap:wrap}
+.hint-admin{font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.7}
+.tr-l1{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#EEF2FF;border-radius:11px;margin-bottom:6px;flex-wrap:wrap}
+.tr-l1 .tn{font-weight:800;flex:1}
+.tr-l2{display:flex;align-items:center;gap:8px;padding:8px 10px;padding-left:26px;background:#F7F8FF;border-radius:10px;margin:4px 0;flex-wrap:wrap}
+.tr-l2 .tn{font-weight:700;flex:1}
+.tr-l3{display:flex;align-items:center;gap:8px;padding:8px 10px;padding-left:46px;background:#FBFCFF;border-radius:10px;margin:4px 0;flex-wrap:wrap}
+.tr-l3 .timg{width:36px;height:36px;border-radius:8px;object-fit:cover;flex:0 0 auto;background:var(--blue-soft)}
+.tr-l3 .tn{flex:1;font-weight:600;display:flex;align-items:center;gap:8px}
+.mini-act{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:9px;font-size:12px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2)}
+.mini-act:hover{border-color:var(--blue);color:var(--blue-deep)}
+.mini-act.danger{color:var(--danger);border-color:#F3C1C1}
+.mini-act.danger:hover{background:#FFECEC}
+.mini-act.good{color:var(--ok);border-color:#C9EBD8}
+
+.modal{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(32,38,74,.5);backdrop-filter:blur(3px)}
+.modal.show{display:flex}
+.modal-card{background:#fff;border-radius:20px;width:min(440px,94vw);max-height:88vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+.modal-head h3{font-size:18px}
+.modal-body{padding:18px}
+.modal .f-label{margin-top:14px}
+
+.share-box{border:1.5px dashed var(--blue);border-radius:16px;padding:16px;background:linear-gradient(160deg,#F0F5FF,#FFF0F7)}
+.share-title{font-weight:900;font-size:20px}
+.share-type{display:inline-block;margin-top:4px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+.share-rows{margin-top:12px;display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+.share-rows div span{color:var(--ink-3);margin-right:8px}
+.share-qr{display:flex;justify-content:center;margin:16px 0 6px}
+.share-foot{text-align:center;font-size:12px;color:var(--ink-3)}
+
+.footer{margin-top:40px;border-top:1px solid var(--line);background:#fff;padding:30px 20px 90px;text-align:center;color:var(--ink-3);font-size:13px}
+.footer .fbrand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+.footer .fbrand .name{font-size:20px}
+
+.toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);background:#20264A;color:#fff;padding:12px 22px;border-radius:14px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:120;box-shadow:0 12px 30px rgba(0,0,0,.25);max-width:88vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(min-width:560px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .kv{grid-template-columns:repeat(2,1fr)}
+  .opt-grid{grid-template-columns:repeat(2,1fr)}
+  .tag-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:820px){
+  .hero .inner{grid-template-columns:1.05fr .95fr;align-items:center;padding:64px 20px 72px}
+  .hero-copy h1{font-size:56px}
+  .g-main{grid-template-columns:1.6fr 1fr}
+  .group-title h1{font-size:36px}
+  .grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1080px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .tag-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:819px){
+  .nav .actions .hide-m{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<button class="admin-fab" onclick="location.hash='#/admin'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.2.63.83 1 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>管理</button>
+
+<div class="toast" id="toast"></div>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"></div>
+<button class="btn btn-pink filter-fab" id="filterFab" onclick="toggleSheet(true)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg> 筛选 <span class="cnt" id="filterCnt" style="display:none">0</span></button>
+<div class="modal" id="modal"></div>
+
+<script>
+/* ============ 图标 ============ */
+const I0={
+ pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>',
+ clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+ music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l10-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>',
+ users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.4"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 4.5a3.4 3.4 0 0 1 0 7"/><path d="M17.5 14.5a5.5 5.5 0 0 1 3.2 5.5"/></svg>',
+ filter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg>',
+ back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',
+ star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.8 5.6 21.6 7 14.5l-5.3-5 7.2-.9z"/></svg>',
+ edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h16M5 16l12-12 3 3L8 19z"/></svg>',
+ check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+ smile:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a5 5 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>',
+ photo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="M20 17l-5-5-4 4-3-3-5 4"/></svg>',
+ up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+ down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>',
+ play:'<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>'
+};
+const I=I0;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const escAttr=s=>esc(s).replace(/"/g,'&quot;');
+
+/* ============ 数据存储（全部在 localStorage，初始为空） ============ */
+const K_TREE='ywb_tree3';
+const K_GROUPS='ywb_groups3';
+const K_APPLIES='ywb_applies3';
+const K_HMSG='ywb_hmsg3';
+const K_GMSG='ywb_gmsg3';
+const ADMIN_CODE='约舞888';
+const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const tree=()=>load(K_TREE,[]);
+const saveTree=t=>store(K_TREE,t);
+const groups=()=>load(K_GROUPS,[]);
+const saveGroups=g=>store(K_GROUPS,g);
+function uid(p){return (p||'n')+Date.now()+Math.floor(Math.random()*900)}
+
+/* 标签树工具 */
+function findNode(tr,id){
+ for(const l1 of tr){if(l1.id===id)return{node:l1,depth:1,parent:null};
+  for(const l2 of l1.children||[]){if(l2.id===id)return{node:l2,depth:2,parent:l1};
+   for(const l3 of l2.children||[]){if(l3.id===id)return{node:l3,depth:3,parent:l2,gp:l1};}}}
+ return null;}
+function groupTagOf(g){const f=findNode(tree(),g.tagId);return f&&f.depth===3?{name:f.node.name,l1:f.gp&&f.gp.name,l2:f.parent&&f.parent.name}:null;}
+function tagCount(id){return groups().filter(g=>g.tagId===id).length}
+function leafList(tr){const out=[];tr.forEach(l1=>(l1.children||[]).forEach(l2=>(l2.children||[]).forEach(l3=>out.push({node:l3,l1:l1.name,l2:l2.name}))));return out}
+
+/* 全局筛选状态 */
+let F={tag:null,l1:[],l2:[],kw:'',types:[],days:[],holiday:false,min:0,any:true,audit:false,zero:false,song:'',sort:'new'};
+const TYPES=['录舞','爬台'];
+const DAYS=['工作日晚上','周末','节假日'];
+const CITIES=['北京','上海','广东·广州','广东·珠海','广东·深圳','香港','浙江·杭州','四川·成都','重庆','湖北·武汉'];
+const STYLE_COLORS=['#5B7CFF','#F05BA8','#6FC5BC','#B98BFF','#FF9C6E','#3D5AF5','#F78BC0','#3EAFA0','#8B5CF6','#F57C43'];
+function gColor(id){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))%97;const i=h%STYLE_COLORS.length;return[STYLE_COLORS[i],STYLE_COLORS[(i+3)%STYLE_COLORS.length]]}
+
+/* ============ 筛选面板 ============ */
+function sheetHTML(){
+ const tr=tree();
+ const l1s=tr.map(l1=>l1.name);
+ return `
+ <div class="sheet-head"><h3 class="disp">筛选舞团</h3><button class="icon-btn" onclick="toggleSheet(false)">✕</button></div>
+ <div class="sheet-body">
+  <div class="fgroup"><label>${I.star}大类（风格） <span class="hint">点击选择，可多选</span></label>
+   <div class="cset" id="fL1">${l1s.map(s=>`<button class="chip ${F.l1.includes(s)?'on':''}" data-v="${escAttr(s)}" onclick="tgL1('${escAttr(s)}')">${esc(s)}</button>`).join('')||'<span class="hint">后台还没有大类标签</span>'}</div>
+  </div>
+  <div class="fgroup"><label>${I.music}活动类型 <span class="hint">点击选择，可多选</span></label>
+   <div class="cset" id="fTypes">${TYPES.map(t=>`<button class="chip ${F.types.includes(t)?'on':''}" data-v="${t}" onclick="tgType('${t}')">${t}</button>`).join('')}</div>
+  </div>
+  <div class="fgroup"><label>${I.pin}所属地 <span class="hint">常用城市 + 关键词检索</span></label>
+   <div class="cset" id="fCities">${CITIES.map(c=>`<button class="chip ${F.kw===c?'on':''}" data-v="${escAttr(c)}" onclick="F.kw=F.kw===c?'':c;repaintSheet()">${c}</button>`).join('')}</div>
+   <input class="finput" style="margin-top:10px" placeholder="输入城市/地区关键词检索，如：珠海、香港" value="${esc(F.kw)}" oninput="F.kw=this.value;liveFilter()" id="fKw">
+  </div>
+  <div class="fgroup"><label>${I.clock}排练时间 <span class="hint">多选排练时段，是否包含节假日</span></label>
+   <div class="cset" id="fDays">${DAYS.map(d=>`<button class="chip ${F.days.includes(d)?'on':''}" data-v="${d}" onclick="tgDay('${d}')">${d}</button>`).join('')}</div>
+   <div class="toggle-row" style="margin-top:6px"><span class="tlabel">${I.clock} 仅节假日</span><label class="switch"><input type="checkbox" id="fHoliday" ${F.holiday?'checked':''} onchange="F.holiday=this.checked;repaintSheet()"><span class="slider"></span></label></div>
+  </div>
+  <div class="fgroup"><label>${I.users}招募人数 <span class="hint">至少招募多少人</span></label>
+   <div class="range-row"><input type="range" min="0" max="30" value="${F.min}" id="fRange" oninput="F.min=+this.value;document.getElementById('fRangeVal').textContent=F.any?'不限':'≥'+this.value+'人';liveFilter()"><span class="range-val" id="fRangeVal">${F.any?'不限':'≥'+F.min+'人'}</span></div>
+   <div class="toggle-row"><span class="tlabel">${I.users} 不限人数</span><label class="switch"><input type="checkbox" id="fAny" ${F.any?'checked':''} onchange="F.any=this.checked;document.getElementById('fRangeVal').textContent=F.any?'不限':'≥'+F.min+'人';liveFilter()"><span class="slider"></span></label></div>
+  </div>
+  <div class="fgroup"><label>${I.filter}更多条件</label>
+   <div class="toggle-row"><span class="tlabel">可互审（能看团长作品）</span><label class="switch"><input type="checkbox" id="fAudit" ${F.audit?'checked':''} onchange="F.audit=this.checked;repaintSheet()"><span class="slider"></span></label></div>
+   <div class="toggle-row"><span class="tlabel">零基础可来</span><label class="switch"><input type="checkbox" id="fZero" ${F.zero?'checked':''} onchange="F.zero=this.checked;repaintSheet()"><span class="slider"></span></label></div>
+   <input class="finput" style="margin-top:12px" placeholder="曲目关键词检索，如：Gee、夜航星" value="${esc(F.song)}" oninput="F.song=this.value;liveFilter()" id="fSong">
+  </div>
+  <div class="fgroup"><label>${I.edit}排序方式</label>
+   <div class="cset">${[['new','最新发布'],['hot','热度最高'],['many','招募最多']].map(([k,v])=>`<button class="chip ${F.sort===k?'on':''}" data-v="${k}" onclick="setSort('${k}')">${v}</button>`).join('')}</div>
+  </div>
+ </div>
+ <div class="sheet-foot"><button class="btn btn-ghost" onclick="resetFilter()">重置</button><button class="btn btn-pink" onclick="applyFilter()">应用筛选</button></div>`;
+}
+function tgL1(s){F.l1=F.l1.includes(s)?F.l1.filter(x=>x!==s):F.l1.concat(s);repaintSheet();}
+function tgType(t){F.types=F.types.includes(t)?F.types.filter(x=>x!==t):F.types.concat(t);repaintSheet();}
+function tgDay(d){F.days=F.days.includes(d)?F.days.filter(x=>x!==d):F.days.concat(d);repaintSheet();}
+function setSort(k){F.sort=k;repaintSheet();liveFilter();}
+function repaintSheet(){const s=document.getElementById('sheet');if(!s)return;
+ s.querySelectorAll('.chip').forEach(c=>{const v=c.dataset.v;const k=escAttr(c.dataset.v);c.classList.toggle('on',F.l1.includes(k)||F.types.includes(v)||F.days.includes(v)||F.sort===v)});
+ const kw=document.getElementById('fKw');if(kw)kw.value=F.kw;
+ const sg=document.getElementById('fSong');if(sg)sg.value=F.song;
+ const hd=document.getElementById('fHoliday');if(hd)hd.checked=F.holiday;
+ const an=document.getElementById('fAny');if(an)an.checked=F.any;
+ const rg=document.getElementById('fRange');if(rg)rg.value=F.min;
+ const rv=document.getElementById('fRangeVal');if(rv)rv.textContent=F.any?'不限':'≥'+F.min+'人';
+ updateFilterBadge();}
+function openSheet(){document.getElementById('sheet').innerHTML=sheetHTML();document.getElementById('sheet').classList.add('open');document.getElementById('scrim').classList.add('show')}
+function toggleSheet(force){const s=document.getElementById('sheet');const sc=document.getElementById('scrim');
+ if(!s)return;
+ if(force===false){s.classList.remove('open');sc.classList.remove('show');return}
+ if(s.classList.contains('open')){s.classList.remove('open');sc.classList.remove('show')}else{openSheet()}}
+function liveFilter(){updateFilterBadge();render();}
+function resetFilter(){F={tag:null,l1:[],l2:[],kw:'',types:[],days:[],holiday:false,min:0,any:true,audit:false,zero:false,song:'',sort:'new'};document.getElementById('sheet').innerHTML=sheetHTML();liveFilter();}
+function applyFilter(){toggleSheet(false);liveFilter();}
+function filterCount(){let n=0;if(F.tag)n++;if(F.l1.length)n++;if(F.types.length)n++;if(F.kw)n++;if(F.days.length)n++;if(F.holiday)n++;if(!F.any)n++;if(F.audit)n++;if(F.zero)n++;if(F.song)n++;return n}
+function updateFilterBadge(){const c=document.getElementById('filterCnt');const n=filterCount();c.style.display=n?'inline-flex':'none';c.textContent=n}
+function matchGroup(g){
+ if(F.tag&&g.tagId!==F.tag)return false;
+ const tg=groupTagOf(g);
+ if(F.l1.length&&!(tg&&F.l1.includes(tg.l1)))return false;
+ if(F.types.length&&!F.types.some(t=>g.type===t||(g.type==='录舞+爬台'&&TYPES.includes(t))))return false;
+ if(F.kw){const q=F.kw.trim();if(q){const hay=(g.lu.loc+' '+(g.pa?g.pa.loc:'')+' '+g.name).toLowerCase();if(!hay.includes(q.toLowerCase()))return false}}
+ if(F.days.length&&!F.days.some(d=>(g.days||[]).includes(d)))return false;
+ if(F.holiday&&!(g.days||[]).includes('节假日'))return false;
+ if(!F.any&&g.recruit.length<F.min)return false;
+ if(F.audit&&!g.leader.audit)return false;
+ if(F.zero&&!g.join.zero)return false;
+ if(F.song){const q=F.song.trim().toLowerCase();const hay=(g.song||'').toLowerCase();if(!hay.includes(q))return false}
+ return true;
+}
+function sortedGroups(list){const arr=list.slice();
+ if(F.sort==='hot')arr.sort((a,b)=>b.views-a.views);
+ else if(F.sort==='many')arr.sort((a,b)=>b.recruit.length-a.recruit.length);
+ else arr.sort((a,b)=>b.t.localeCompare(a.t));
+ return arr;}
+
+/* ============ 路由 ============ */
+function render(){
+ const h=location.hash||'#/';
+ const home=h==='#/'||!h.startsWith('#/');
+ document.getElementById('filterFab').style.display=home?'inline-flex':'none';
+ if(h.startsWith('#/group/')){const id=h.replace('#/group/','').split('?')[0];return groupPage(id)}
+ if(h.startsWith('#/create')){document.getElementById('app').innerHTML=createHTML();window.scrollTo(0,0);return}
+ if(h==='#/admin'){document.getElementById('app').innerHTML=adminHTML();window.scrollTo(0,0);return}
+ document.getElementById('app').innerHTML=homeHTML();window.scrollTo(0,0);
+}
+
+/* ============ 首页（完全动态渲染） ============ */
+function homeHTML(){
+ const tr=tree();const gs=groups();
+ const leafs=leafList(tr);
+ const hasTag=!!F.tag;
+ const selected=hasTag?findNode(tr,F.tag):null;
+ const list=gs.filter(g=>!g.ended);
+ const shown=list.filter(matchGroup);
+ const sorted=sortedGroups(shown);
+ const msgs=load(K_HMSG,[]);
+ return `
+ <div class="hero">
+  <div class="inner">
+   <div class="hero-copy">
+    <span class="eyebrow">● 民间舞团招募 · 录舞 · 爬台</span>
+    <h1 class="disp">一起 <span class="g1">约舞</span> <span class="g2">吧！</span></h1>
+    <p class="sub">选择下方任意一个舞种标签，看看有哪些舞团正在招募；没有合适的就自己创建一个招募。</p>
+    <div class="hero-cta">
+      <button class="btn btn-blue" onclick="document.getElementById('tagpick').scrollIntoView({behavior:'smooth'})">选标签 · 找舞团</button>
+      <button class="btn btn-ghost" onclick="location.hash='#/create'">＋ 创建我的舞团</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>${leafs.length}</b><span>标签</span></div>
+      <div class="stat"><b>${gs.length}</b><span>舞团</span></div>
+      <div class="stat"><b>${tr.length}</b><span>大类</span></div>
+    </div>
+   </div>
+   <div class="hero-visual">
+    <div class="frame" style="height:400px;background:linear-gradient(150deg,#EAF0FF,#FFECF6);display:flex;align-items:center;justify-content:center">${I.music}
+     <div class="float-card c1"><span class="dot"></span>${leafs.length} 个标签可选</div>
+     <div class="float-card c2"><span class="dot"></span>点卡片进入舞团</div></div>
+   </div>
+  </div>
+ </div>
+ <div class="container">
+  ${tr.length?`<div class="sec" id="tagpick">
+   <div class="sec-head">
+    <div><h2 class="disp">选择舞种标签</h2><div class="sub">标签由后台配置 · 团长发布招募时也能新建</div></div>
+    <div class="sec-bar">${hasTag?`<button class="chip on" onclick="F.tag=null;render()">${I.check} ${esc(selected&&selected.node.name||'')} · 清空</button>`:''}</div>
+   </div>
+   ${tr.map((l1,i)=>`<div class="tag-sec">
+    <div class="ts-head"><span class="ct-chip">大类 ${i+1}</span><span class="ts-name">${esc(l1.name)}</span><span class="ts-sub">${(l1.children||[]).length} 个细分</span></div>
+    ${(l1.children||[]).map(l2=>`
+      <div style="margin:10px 0 8px;display:flex;align-items:center;gap:8px"><span class="pill" style="background:var(--pink-soft);border-color:var(--pink);color:var(--pink-deep)">${esc(l2.name)}</span><span class="ts-sub">${(l2.children||[]).length} 个标签</span></div>
+      <div class="tag-grid">${(l2.children||[]).map(l3=>tagCardHTML(l3)).join('')}</div>`).join('')}
+   </div>`).join('')}
+  </div>`:''}
+
+  <div class="sec" id="browse">
+   <div class="sec-head">
+    <div><h2 class="disp">正在招募</h2><div class="sub">${hasTag?('已选：'+esc(selected&&selected.node.name||'')):(gs.length?'全部舞团 · 点筛选缩小范围':tr.length?'':'管理员可先在后台添加标签与舞团')}</div></div>
+    <div class="sec-bar">
+     ${filterCount()?`<button class="chip on" onclick="resetFilter()">${I.check} 已筛 ${filterCount()} 项 · 重置</button>`:''}
+     <button class="chip" onclick="toggleSheet(true)">${I.filter} 更多筛选${filterCount()?`<span class="cnt" style="display:inline-flex;margin-left:4px">${filterCount()}</span>`:''}</button>
+     <span class="sub">共 ${sorted.length} 个</span>
+    </div>
+   </div>
+   ${!tr.length?`<div class="empty"><div>${I.star}</div><h3>还没有舞种标签</h3><p>管理员请进入后台搭建标签树，再添加舞团；普通用户可用下方按钮发起招募（需先有标签）</p><button class="btn btn-pink" onclick="location.hash='#/admin'">进入管理后台</button></div>`
+   :(sorted.length?`<div class="grid">${sorted.map(cardHTML).join('')}</div>`
+   :`<div class="empty"><div>${I.filter}</div><h3>${hasTag?'这个标签下暂时没有在招募的舞团':'还没有舞团招募'}</h3><p>${hasTag?'换个标签，或创建第一个招募':'后台管理员可先添加舞团，或由你发起招募'}</p><button class="btn btn-pink" onclick="location.hash='#/create'">创建招募</button></div>`)}
+  </div>
+
+  <div class="sec" style="padding-bottom:40px">
+   <div class="card">
+    <h3>${I.smile} 留言建议 · 让约舞吧更好用</h3>
+    <p class="note" style="margin:0 0 14px">说说你希望约舞吧怎么优化：标签、筛选、页面体验，管理员和团长都会看到。</p>
+    <div class="msg-form">
+     <textarea id="hmsgTxt" placeholder="例如：希望增加某个舞种标签、新的筛选项…"></textarea>
+     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+       <input class="finput" style="flex:1;min-width:160px" id="hmsgName" placeholder="你的昵称（选填）">
+       <button class="btn btn-pink" onclick="postMsg()">发布留言</button>
+     </div>
+    </div>
+    <div class="msg-list" id="hmsgList">${msgs.map(m=>msgItem(m)).join('')||'<div class="note">还没有留言，来抢沙发～</div>'}</div>
+   </div>
+  </div>
+ </div>`;
+}
+function tagCardHTML(l3){
+ const on=F.tag===l3.id;
+ const count=tagCount(l3.id);
+ return `<div class="tag-card ${on?'on':''}" onclick="F.tag=on?null:l3.id;render()">
+  <div class="tc-cover">${l3.img?`<img src="${l3.img}" loading="lazy" onerror="this.style.display='none'">`:`<div class="tc-fb">${I.photo}</div>`}${on?'<span class="tc-chk">${I.check}</span>':''}</div>
+  <div class="tc-body"><div class="g-name">${esc(l3.name)}</div><div class="tc-count">${count} 个舞团</div></div>
+ </div>`;
+}
+function cardHTML(g){
+ const total=g.recruit.length,open=g.recruit.filter(r=>r.open).length,filled=total-open,ratio=total?filled/total:0;
+ const [a,b]=gColor(g.id);
+ const tg=groupTagOf(g);
+ const cover=g.img?`<div class="g-top" style="background-image:url('${g.img}');background-size:cover;background-position:center"><span class="type-tag">${esc(g.type)}</span><span class="g-top-name">${esc(g.name)}</span>${g.t>='2026-10-26'?'<span class="g-new2">新</span>':''}</div>`
+ :`<div class="g-top" style="--ca:${a};--cb:${b}"><span class="type-tag">${esc(g.type)}</span><span class="g-top-name">${esc(g.name)}</span>${g.t>='2026-10-26'?'<span class="g-new2">新</span>':''}</div>`;
+ return `<article class="group-card" onclick="location.hash='#/group/${g.id}'">
+  ${cover}
+  <div class="g-body">
+   <div class="g-tags">${tg?`<span class="pill" style="background:var(--blue-soft);color:var(--blue-deep);border-color:var(--blue)">${esc(tg.name)}</span>`:''}${tg&&tg.l1?`<span class="pill">${esc(tg.l1)} · ${esc(tg.l2)}</span>`:''}</div>
+   <div class="g-曲目">${rangeHTML(g)}</div>
+   <div class="g-meta">
+    <div class="row">${I.pin}<span>${esc(g.lu.loc)}${g.pa&&g.pa.loc!==g.lu.loc?' / '+esc(g.pa.loc):''}</span></div>
+    <div class="row">${I.users}<span>招募 ${g.recruit.length} 个位置 · 缺${open}</span></div>
+   </div>
+   <div class="g-progress"><div class="track"><div class="fill" style="width:${ratio*100}%"></div></div><span class="num">${filled}/${total}</span></div>
+  </div>
+ </article>`;
+}
+function msgItem(m){return `<div class="msg-item"><div class="ava">${esc((m.who||'舞').slice(0,1))}</div><div class="mc"><div class="who">${esc(m.who||'匿名舞友')}<span class="time">${esc(m.time)}</span></div><div class="txt">${esc(m.txt)}</div></div></div>`}
+/* 时间范围格式化：g.lu.time / g.lu.start~end 兼容 */
+function timeRange(t){if(!t)return '日期待定';if(t.time)return t.time;if(t.start||t.end)return `${t.start||'?'} ~ ${t.end||'?'}`;return '日期待定'}
+function daysLabel(g){const d=g.days||[];if(!d.length)return '';const hol=g.holiday?' · 仅节假日':'';return d.join('·')+hol}
+function rangeHTML(g){let s=esc(timeRange(g.lu));if(g.show)s+=' / 演出 '+esc(g.show);if(g.days&&g.days.length)s+=`<span style="opacity:.75"> · ${esc(daysLabel(g))}</span>`;return s}
+function postMsg(){const txt=document.getElementById('hmsgTxt').value.trim();const who=document.getElementById('hmsgName').value.trim()||'匿名舞友';
+ if(!txt){toast('写点内容再发布吧');return}
+ const msgs=load(K_HMSG,[]);msgs.unshift({who,txt,time:nowStr()});store(K_HMSG,msgs);
+ document.getElementById('hmsgTxt').value='';render();toast('留言已发布，谢谢你的建议');}
+
+/* ============ 舞团主页（复刻 YO次元 结构） ============ */
+function groupHTML(g){
+ const applies=load(K_APPLIES,[]);const myApply=applies.filter(a=>a.g===g.id);
+ const msgs=load(K_GMSG,{})[g.id]||[];
+ const total=g.recruit.length,open=g.recruit.filter(r=>r.open).length;
+ const other=Object.entries(g.opt||{}).filter(([k])=>k!=='其他');
+ const tg=groupTagOf(g);
+ const [ca,cb]=gColor(g.id);
+ const band=g.img?`<div class="g-band" style="background-image:url('${g.img}');background-size:cover;background-position:center"></div>`:`<div class="g-band" style="--ca:${ca};--cb:${cb}">${I.music}</div>`;
+ const topics=g.topics?Object.entries(g.topics).filter(([,v])=>v):[];
+ return `
+ <div class="back-bar"><button class="back-btn" onclick="location.hash='#/'">${I.back} 返回</button><span class="sub" style="color:var(--ink-3);font-size:13px">更新于 ${esc(g.t)}</span></div>
+ <div class="group-hero"><div class="frame">${band}
+  <div class="g-hero-tags">${tg?`<span class="pill" style="background:rgba(255,255,255,.92);color:var(--blue-deep)">${esc(tg.name)}</span><span class="pill">${esc(tg.l1)} · ${esc(tg.l2)}</span>`:''}</div></div></div>
+ <div class="group-title"><h1 class="disp">${esc(g.name)}</h1><div class="g-pills"><span class="pill">${esc(g.lu.loc)}</span><span class="pill">${esc(g.type)}</span></div></div>
+ <div class="g-main">
+  <div style="display:flex;flex-direction:column;gap:22px">
+   <div class="card">
+    <h3>${I.pin} 基础信息</h3>
+    <div class="kv">
+     <div class="item"><span class="k">类型</span><span class="v"><span class="type-tag">${esc(g.type)}</span></span></div>
+     <div class="item"><span class="k">排练周期</span><span class="v">${esc(timeRange(g.lu))}</span></div>
+     <div class="item"><span class="k">${g.type==='爬台'?'爬台地点':'录舞地点'}</span><span class="v">${esc(g.lu.loc)}</span></div>
+     ${g.pa&&g.pa.loc&&g.pa.loc!==g.lu.loc?`<div class="item"><span class="k">排练地点</span><span class="v">${esc(g.pa.loc)}</span></div>`:''}
+     ${daysLabel(g)?`<div class="item"><span class="k">排练时段</span><span class="v">${esc(daysLabel(g))}</span></div>`:''}
+     ${(g.reh&&g.reh.length)?`<div class="item"><span class="k">排练场次</span><span class="v">${g.reh.map(r=>esc(r.d||'日期待定')+(r.t?' · '+esc(r.t):'')).join('<br>')}</span></div>`:''}
+     ${g.show?`<div class="item"><span class="k">正式演出</span><span class="v">${esc(g.show)}</span></div>`:''}
+     ${g.join.zero?`<div class="item"><span class="k">基础要求</span><span class="v">零基础可来</span></div>`:''}
+     ${g.song?`<div class="item"><span class="k">曲目</span><span class="v">${esc(g.song)}</span></div>`:''}
+    </div>
+    ${g.desc?`<p class="note" style="margin-top:12px">${esc(g.desc)}</p>`:''}
+   </div>
+   ${topics.length?`<div class="card">
+    <h3>${I.star} 选题基础信息</h3>
+    <div class="opt-grid">
+     ${topics.map(([k,v])=>`<div class="opt-item"><div class="k">${k==='ref'?'参考视频/编舞':k==='photo'?'摄影':k==='venue'?'场地':k==='costume'?'服装妆造':k==='prop'?'道具':k==='light'?'灯光':k==='edit'?'后期剪辑':k}</div><div class="v">${esc(v)}</div></div>`).join('')}
+    </div>
+   </div>`:''}
+   <div class="card">
+    <h3>${I.users} 招募位置</h3>
+    <div class="recruit-list" id="recruitList">${g.recruit.map(r=>recruitItem(g,r)).join('')}</div>
+    ${myApply.length?`<div class="applied-note">${I.check} 你已报名：${myApply.map(a=>a.t+'（CN：'+a.cn+'）').join('、')}，团长确认后会更新状态。</div>`:''}
+   </div>
+   <div class="card">
+    <h3>${I.check} 入团要求</h3>
+    <div class="opt-grid">
+     <div class="opt-item"><div class="k">性别</div><div class="v">${esc(g.join.gender)}</div></div>
+     <div class="opt-item"><div class="k">审妆</div><div class="v">${esc(g.join.makeup)}</div></div>
+     <div class="opt-item"><div class="k">审舞</div><div class="v">${esc(g.join.dance)}</div></div>
+     ${other.length?other.map(([k,v])=>`<div class="opt-item"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join(''):''}
+    </div>
+   </div>
+   <div class="card">
+    <h3>${I.smile} 给团长留言</h3>
+    <div class="msg-form">
+     <textarea id="gmsgTxt" style="min-height:70px" placeholder="问问时间、场地、难度，或直接约练…"></textarea>
+     <div style="display:flex;gap:10px"><input class="finput" style="flex:1" id="gmsgName" placeholder="你的昵称（选填）"><button class="btn btn-blue btn-sm" style="flex:0 0 auto" onclick="postGroupMsg('${g.id}')">发送</button></div>
+    </div>
+    <div class="msg-list">${msgs.map(m=>msgItem(m)).join('')||'<div class="note">还没有留言，第一个约起来～</div>'}</div>
+   </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:22px">
+   <div class="card">
+    <h3>${I.edit} 团长 · 联系方式</h3>
+    <div class="leader-block">
+     <div class="leader-row">
+      <div class="leader-chip">CN：${esc(g.leader.cn)}</div>
+      <div class="leader-chip">${esc(g.leader.contact)}</div>
+     </div>
+     ${g.leader.audit?`<div style="font-size:13px;color:var(--ink-2)"><b style="color:var(--ok)">可互审</b> · 团长可提供作品供你参考</div>
+      <div class="works-list">${(g.leader.works||[]).map(w=>`<div class="work-item">${I.play}${workTypeName(w.type)} · ${esc(w.v)}</div>`).join('')}</div>`:''}
+     <div class="leader-acts">
+      <button class="btn btn-ghost" onclick="contactLeader('${escAttr(g.leader.contact)}')">显示团长联系方式</button>
+      <button class="btn btn-pink" onclick="openApplyModal('${g.id}')">填写报名</button>
+     </div>
+    </div>
+   </div>
+   <div class="card">
+    <h3>${I.filter} 团长操作</h3>
+    <div class="leader-acts" style="margin-top:6px">
+      <button class="btn btn-ghost btn-sm" onclick="openShareModal('${g.id}')">分享招募卡片</button>
+      <button class="btn btn-ghost btn-sm" onclick="location.hash='#/group/${g.id}?mgr=1'">查看申请 / 划掉</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleEnd('${g.id}')">${g.ended?'恢复招募':'结束招募'}</button>
+    </div>
+   </div>
+  </div>
+ </div>`;
+}
+function workTypeName(t){return t==='video'?'展示视频':t==='bilibili'?'B站':t==='xiaohongshu'?'小红书':t==='douyin'?'抖音':t}
+function recruitItem(g,r){
+ const applied=load(K_APPLIES,[]).some(a=>a.g===g.id&&a.t===r.t);
+ return `<div class="recruit-item ${r.open?'':'done'}">
+   <span class="ri-name"><span class="ic">${esc(r.t.slice(0,1))}</span>${esc(r.t)}</span>
+   <span class="ri-status ${r.open?(applied?'st-applied':'st-open'):'st-done'}">${r.open?(applied?'已报名':'招募中'):'已招满'}</span>
+   ${applied?`<span class="ri-act"><button class="btn btn-ghost btn-sm" onclick="cancelApply('${g.id}','${escAttr(r.t)}')">取消</button></span>`:''}
+ </div>`;
+}
+function cancelApply(gid,t){store(K_APPLIES,load(K_APPLIES,[]).filter(a=>!(a.g===gid&&a.t===t)));render();toast('已取消报名');}
+function openApplyModal(gid){const g=groups().find(x=>x.id===gid);if(!g)return;
+ const openPos=g.recruit.filter(r=>r.open).map(r=>`<option value="${escAttr(r.t)}">${esc(r.t)}</option>`).join('')||'<option value="">暂无开放位置</option>';
+ showModal(`<div class="modal-card">
+  <div class="modal-head"><h3 class="disp">填写报名</h3><button class="icon-btn" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+   <p class="note" style="margin-bottom:6px">报名「${esc(g.name)}」 · 团长 ${esc(g.leader.cn)}</p>
+   <label class="f-label">招募位置</label>
+   <select class="finput" id="apPos">${openPos}</select>
+   <label class="f-label">你的 CN（圈名）<span class="req">*</span></label>
+   <input class="finput" id="apCn" placeholder="例如：千歌酱">
+   <label class="f-label">作品链接 <small>B站 / 小红书 / 抖音 作品，便于团长审舞</small></label>
+   <input class="finput" id="apWorks" placeholder="粘贴作品链接或账号ID">
+   <button class="btn btn-pink" style="width:100%;margin-top:16px" onclick="doApply('${gid}')">提交报名</button>
+  </div></div>`);}
+function doApply(gid){const pos=document.getElementById('apPos').value;const cn=document.getElementById('apCn').value.trim();
+ if(!pos){toast('这个舞团暂时没有开放的招募位置');return}
+ if(!cn){toast('请填写你的 CN');return}
+ const works=document.getElementById('apWorks').value.trim();
+ const applies=load(K_APPLIES,[]);if(applies.some(a=>a.g===gid&&a.t===pos)){toast('这个位置你已经报过啦');closeModal();return}
+ applies.push({g:gid,t:pos,cn,works,time:nowStr()});store(K_APPLIES,applies);closeModal();render();toast('报名成功，团长确认后会通知你');}
+function openShareModal(gid){const g=groups().find(x=>x.id===gid);if(!g)return;
+ const tg=groupTagOf(g);
+ showModal(`<div class="modal-card">
+  <div class="modal-head"><h3 class="disp">分享招募卡片</h3><button class="icon-btn" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+   <div class="share-box">
+    <div class="share-title">${esc(g.name)}</div>
+    <div class="share-type">${esc(g.type)}</div>
+    <div class="share-rows">
+     <div><span>活动时间</span><b>${esc(rangeHTML(g))}</b></div>
+     <div><span>活动地点</span><b>${esc(g.lu.loc)}${g.pa&&g.pa.loc&&g.pa.loc!==g.lu.loc?'（排练：'+esc(g.pa.loc)+'）':''}</b></div>
+     <div><span>招募位置</span><b>${g.recruit.filter(r=>r.open).map(r=>esc(r.t)).join('、')||'暂无'}</b></div>
+     <div><span>团长</span><b>${esc(g.leader.cn)}</b></div>
+     ${tg?`<div><span>标签</span><b>${esc(tg.l1)} · ${esc(tg.l2)} · ${esc(tg.name)}</b></div>`:''}
+    </div>
+    <div class="share-qr">${qrSVG()}</div>
+    <div class="share-foot">长按保存/分享卡片 · 报名或联系团长</div>
+   </div>
+   <div class="leader-acts" style="margin-top:14px">
+    <button class="btn btn-blue" onclick="closeModal();contactLeader('${escAttr(g.leader.contact)}')">复制团长联系方式</button>
+    <button class="btn btn-pink" onclick="closeModal();openApplyModal('${g.id}')">去报名</button>
+   </div>
+  </div></div>`);}
+function qrSVG(){let cells='';for(let i=0;i<7;i++){for(let j=0;j<7;j++){if(((i*7+j)*13%5)===0||(i*7+j)%11===0)cells+=`<rect x="${1.5+j*4.4}" y="${1.5+i*4.4}" width="3.2" height="3.2" rx="0.8"/>`}}return `<svg viewBox="0 0 36 36" width="88" height="88"><rect width="36" height="36" fill="#fff" rx="3"/><rect x="2" y="2" width="12" height="12" fill="#20264A" rx="1.5"/><rect x="2" y="22" width="12" height="12" fill="#20264A" rx="1.5"/><rect x="22" y="2" width="12" height="12" fill="#20264A" rx="1.5"/>${cells}</svg>`}
+function toggleEnd(gid){const g=groups().find(x=>x.id===gid);if(!g)return;g.ended=!g.ended;saveGroups(groups());render();toast(g.ended?'已结束招募，将从首页隐藏':'已恢复招募');}
+function showModal(html){const m=document.getElementById('modal');m.innerHTML=html;m.classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function toggleRecruit(gid,t){const g=groups().find(x=>x.id===gid);const r=g.recruit.find(x=>x.t===t);if(!r)return;r.open=!r.open;saveGroups(groups());render();toast(r.open?'已恢复招募':'已确认并划掉该招募位');}
+function contactLeader(contact){navigator.clipboard&&navigator.clipboard.writeText(contact).then(()=>toast('团长联系方式已复制：'+contact),()=>toast('团长联系方式：'+contact));}
+function postGroupMsg(gid){const txt=document.getElementById('gmsgTxt').value.trim();const who=document.getElementById('gmsgName').value.trim()||'匿名舞友';
+ if(!txt){toast('写点内容再发送吧');return}const msgs=load(K_GMSG,{});(msgs[gid]=msgs[gid]||[]).unshift({who,txt,time:nowStr()});store(K_GMSG,msgs);render();toast('已发送给团长');}
+function groupPage(id){
+ const g=groups().find(x=>x.id===id);if(!g){location.hash='#/';return}
+ document.getElementById('app').innerHTML=groupHTML(g);
+ if(location.hash.includes('mgr=1')){
+  const apps=load(K_APPLIES,[]).filter(a=>a.g===id);
+  const appsCard=apps.length?`<div class="card"><h3>${I.users} 申请列表（${apps.length}）</h3>${apps.map(a=>`<div class="msg-item"><div class="ava">${esc((a.cn||'?').slice(0,1))}</div><div class="mc"><div class="who">${esc(a.cn)}<span class="time">${esc(a.t)} · ${esc(a.time)}</span></div><div class="txt">报名「${esc(a.t)}」${a.works?' · 作品：'+esc(a.works):''}</div></div></div>`).join('')}</div>`:`<div class="card"><h3>${I.users} 申请列表</h3><div class="note">暂无人报名，可分享卡片邀请同好。</div></div>`;
+  const toggles=g.recruit.map(r=>`<div class="recruit-item ${r.open?'':'done'}"><span class="ri-name"><span class="ic">${esc(r.t.slice(0,1))}</span>${esc(r.t)}</span><span class="ri-status ${r.open?'st-open':'st-done'}">${r.open?'招募中':'已招满'}</span><span class="ri-act"><button class="btn btn-ghost btn-sm" onclick="toggleRecruit('${g.id}','${escAttr(r.t)}')">${r.open?'确认划掉':'恢复招募'}</button></span></div>`).join('');
+  document.getElementById('recruitList').innerHTML=toggles;
+  const wrap=document.createElement('div');wrap.innerHTML=appsCard;
+  const left=document.querySelector('.g-main>div:first-child');
+  if(left&&left.firstChild)left.insertBefore(wrap.firstChild,left.firstChild);
+ }
+}
+
+/* ============ 创建招募页（团长端） ============ */
+let CP={tagId:'',leader:{audit:false,works:[]},recruit:[],days:[],holiday:false,type:'录舞',img:'',show:'',reh:[],topics:{}};
+function createHTML(){
+ const tr=tree();const leafs=leafList(tr);
+ const tagOpts=leafs.map(l=>`<option value="${l.node.id}" ${CP.tagId===l.node.id?'selected':''}>${esc(l.l1)} / ${esc(l.l2)} / ${esc(l.node.name)}</option>`).join('')||'<option value="">还没有标签，点右侧「新建标签」自己建</option>';
+ return `<div class="back-bar"><button class="back-btn" onclick="location.hash='#/'">${I.back} 返回</button></div>
+ <div class="create">
+  <div class="head"><h1 class="disp">创建我的舞团招募</h1><p>填好信息，绑定一个舞种标签，你的舞团就会出现在首页</p></div>
+  <div class="err-tip" id="createErr"></div>
+
+  <div class="form-card">
+   <h3><span class="n">1</span>基本信息</h3>
+   <label class="f-label">团名 <span class="req">*</span></label>
+   <div class="f-field"><input id="cName" placeholder="例如：IVE 翻跳团 / 国风汉服社" maxlength="24"></div>
+   <label class="f-label">绑定的舞种标签 <span class="req">*</span> <small>选已有标签，或点右侧新建</small></label>
+   <div style="display:flex;gap:8px"><div class="f-field" style="flex:1"><select id="cTag" onchange="CP.tagId=this.value">${tagOpts}</select></div><button class="btn btn-ghost btn-sm" style="flex:0 0 auto;align-self:flex-start;margin-top:0" onclick="openNewTagModal()">＋ 新建标签</button></div>
+   <label class="f-label">活动类型 <span class="req">*</span> <small>录舞、爬台二选一</small></label>
+   <div class="cset" id="cTypeSel">${TYPES.map(t=>`<button class="chip ${(CP.type||'录舞')===t?'on':''}" data-v="${t}" onclick="setCPType('${t}')">${t}</button>`).join('')}</div>
+   <label class="f-label">招募图 <small>团长上传的舞团招募图，作为主页卡片封面（选填）</small></label>
+   <div class="f-field" style="margin-bottom:8px"><input id="cImg" value="${esc(CP.img||'')}" placeholder="粘贴图片 URL，如 https://…" oninput="CP.img=this.value;previewImg()"></div>
+   <div class="add-row" style="margin-top:0"><button class="btn btn-ghost btn-sm" onclick="document.getElementById('cImgFile').click()">从本地选图</button><input type="file" id="cImgFile" accept="image/*" style="display:none" onchange="readImgFile(this)"></div>
+   <div id="imgPreview" style="margin-top:10px;display:none"><img style="width:100%;max-height:160px;object-fit:cover;border-radius:12px;border:1.5px solid var(--line)"></div>
+   <label class="f-label">一句话介绍 <small>展示在主页顶部</small></label>
+   <div class="f-field"><textarea id="cDesc" style="width:100%;min-height:64px;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;outline:none;background:#FAFBFF;resize:vertical" placeholder="介绍一下你的舞团风格、目标"></textarea></div>
+  </div>
+
+  <div class="form-card">
+   <h3><span class="n">2</span>时间 <small>排练贯穿整个舞团周期，请给日期范围</small></h3>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">排练开始日期</div><input type="date" id="cLuS"></div>
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">排练结束日期</div><input type="date" id="cLuE"></div>
+   </div>
+   <div class="f-label" style="margin-top:14px">排练时段 <small>可多选，是否节假日</small></div>
+   <div class="cset" id="cDays">${DAYS.map(d=>`<button class="chip ${CP.days.includes(d)?'on':''}" data-v="${d}" onclick="tgCPDay('${d}')">${d}</button>`).join('')}</div>
+   <div class="toggle-row" style="margin-top:8px"><span class="tlabel">${I.clock} 仅节假日排练</span><label class="switch"><input type="checkbox" id="cHoliday" ${CP.holiday?'checked':''} onchange="CP.holiday=this.checked"><span class="slider"></span></label></div>
+   <div class="f-label" style="margin-top:16px">排练场次 <small>可增加多次排练，每次填日期与时间段（选填）</small></div>
+   <div class="reh-list" id="cRehList"></div>
+   <div class="add-row" style="margin-top:8px"><input id="cRehDate" type="date" style="flex:0 0 150px"><input id="cRehTime" placeholder="时间段，如 14:00-17:00（选填）" style="flex:1"><button class="btn btn-ghost btn-sm" onclick="addReh()">＋ 排练</button></div>
+   <div class="f-field" style="margin-top:14px"><div class="f-label" style="margin:0 0 6px">正式演出时间 <small>录舞/爬台当天的演出时段（选填，可留空）</small></div><input id="cShowT" value="${esc(CP.show||'')}" placeholder="如：2026-07-01 下午场 / 具体待定"></div>
+  </div>
+
+  <div class="form-card">
+   <h3><span class="n">3</span>地点 <small id="paHint">${CP.type==='爬台'?'本舞团为爬台活动，主要地点如下':'本舞团为录舞活动，主要地点如下'}</small></h3>
+   <div class="f-field"><div class="f-label" id="cLuLLabel" style="margin:0 0 6px">${CP.type==='爬台'?'爬台地点':'录舞地点'}</div><input id="cLuL" placeholder="如：北京 北京"></div>
+   <div class="f-field" style="margin-top:10px"><div class="f-label" style="margin:0 0 6px">排练地点 <small>若与上不同可单独填写（选填）</small></div><input id="cPaL" placeholder="如：社区排练室 / 同录舞地点"></div>
+  </div>
+
+  <div class="form-card">
+   <h3><span class="n">4</span>选题基础信息 <small>参考视频、摄影、场地等，选填</small></h3>
+   <div class="f-label" style="margin-top:0">参考视频 / 参考编舞 <small>粘贴参考原版或编舞视频链接</small></div>
+   <div class="f-field"><input id="cTRef" value="${esc(CP.topics&&CP.topics.ref||'')}" placeholder="如：原版 MV / B站翻跳参考"></div>
+   <div class="f-label">摄影</div>
+   <div class="f-field"><input id="cTPhoto" value="${esc(CP.topics&&CP.topics.photo||'')}" placeholder="是否需要摄影/机位要求，如：需要双机位"></div>
+   <div class="f-label">场地</div>
+   <div class="f-field"><input id="cTVenue" value="${esc(CP.topics&&CP.topics.venue||'')}" placeholder="场地需求，如：镜面舞蹈室 / 户外广场"></div>
+   <div class="f-label">服装妆造 <small>选填</small></div>
+   <div class="f-field"><input id="cTCostume" value="${esc(CP.topics&&CP.topics.costume||'')}" placeholder="如：统一打歌服 / 需自行准备"></div>
+   <div class="f-label">道具 <small>选填</small></div>
+   <div class="f-field"><input id="cTProp" value="${esc(CP.topics&&CP.topics.prop||'')}" placeholder="如：应援棒、扇子等道具"></div>
+   <div class="f-label">灯光 <small>选填</small></div>
+   <div class="f-field"><input id="cTLight" value="${esc(CP.topics&&CP.topics.light||'')}" placeholder="如：需舞台灯光 / 自然光即可"></div>
+   <div class="f-label">后期剪辑 <small>选填</small></div>
+   <div class="f-field"><input id="cTEdit" value="${esc(CP.topics&&CP.topics.edit||'')}" placeholder="如：团长负责后期 / 需招募剪辑"></div>
+  </div>
+
+  <div class="form-card">
+   <h3><span class="n">5</span>招募位置</h3>
+   <label class="f-label">招募位置 <small>成员报名后你可确认「划掉」并更新</small><span class="req">*</span></label>
+   <div class="tag-sel" id="cRecruit"></div>
+   <div class="add-row"><input id="cRecruitAdd" placeholder="如：主舞·Center、摄影·双机位"><button class="btn btn-ghost btn-sm" onclick="addRecruitTag()">＋添加</button></div>
+  </div>
+
+  <div class="form-card">
+   <h3><span class="n">6</span>入团要求</h3>
+   <div style="display:grid;grid-template-columns:1fr;gap:12px">
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">性别</div><select class="finput" id="cGender"><option value="不限">不限</option><option value="仅女生">仅女生</option><option value="仅男生">仅男生</option></select></div>
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">审妆</div><select class="finput" id="cMakeup"><option value="不需要">不需要</option><option value="需要">需要</option></select></div>
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">审舞</div><select class="finput" id="cDance"><option value="不需要">不需要</option><option value="需要">需要</option></select></div>
+   </div>
+   <div class="toggle-row" style="margin-top:10px"><span class="tlabel">${I.users} 零基础可来 <small>筛选时可勾选</small></span><label class="switch"><input type="checkbox" id="cZero"><span class="slider"></span></label></div>
+  </div>
+
+  <div class="form-card">
+   <h3><span class="n">7</span>团长信息</h3>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">CN 名 <span class="req">*</span></div><input id="cCn" placeholder="你的圈名"></div>
+    <div class="f-field"><div class="f-label" style="margin:0 0 6px">联系方式 <span class="req">*</span> <small>微信号/QQ ID</small></div><input id="cContact" placeholder="vx: xxx / QQ: 123"></div>
+   </div>
+   <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line)"><span style="font-size:14px;color:var(--ink-2)">可互审（附上作品供成员参考）</span><label class="switch"><input type="checkbox" id="cAudit" onchange="CP.leader.audit=this.checked;toggleWorksUI()"><span class="slider"></span></label></div>
+   <div id="worksBox" class="hidden">
+    <label class="f-label">作品 <small>展示视频名，或 B站 / 小红书 / 抖音 ID</small></label>
+    <div class="add-row">
+     <select class="finput" id="cWorkType" style="flex:0 0 130px"><option value="video">展示视频</option><option value="bilibili">B站</option><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option></select>
+     <input id="cWorkVal" style="flex:1;padding:10px 13px;border:1.5px solid var(--line);border-radius:12px" placeholder="视频名或平台 ID">
+     <button class="btn btn-ghost btn-sm" onclick="addWork()">＋</button>
+    </div>
+    <div class="works-list" id="cWorks"></div>
+   </div>
+  </div>
+
+  <div class="submit-wrap"><button class="btn btn-pink" style="width:100%;padding:14px" onclick="submitCreate()">发布招募</button></div>
+  <div class="form-tip">发布后，在首页选中对应标签即可看到你的舞团；成员进入招募页即可报名。</div>
+ </div>`;
+}
+function toggleWorksUI(){document.getElementById('worksBox').classList.toggle('hidden',!CP.leader.audit)}
+function setCPType(t){CP.type=t;const sel=document.getElementById('cTypeSel');if(sel)sel.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.v===t));
+ const hint=document.getElementById('paHint');if(hint)hint.innerHTML=(t==='爬台'?'本舞团为爬台活动，主要地点如下':'本舞团为录舞活动，主要地点如下');
+ const lbl=document.getElementById('cLuLLabel');if(lbl)lbl.textContent=(t==='爬台'?'爬台地点':'录舞地点');}
+function tgCPDay(d){CP.days=CP.days.includes(d)?CP.days.filter(x=>x!==d):CP.days.concat(d);document.getElementById('cDays').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',CP.days.includes(c.dataset.v)));}
+function addReh(){const d=document.getElementById('cRehDate').value;const t=document.getElementById('cRehTime').value.trim();
+ if(!d&&!t){toast('请选日期或填时间段');return}
+ CP.reh=CP.reh||[];CP.reh.push({d,t});document.getElementById('cRehDate').value='';document.getElementById('cRehTime').value='';renderReh();}
+function renderReh(){const el=document.getElementById('cRehList');el.innerHTML=(CP.reh||[]).map((r,i)=>`<div class="work-item">${I.clock}${esc(r.d||'日期待定')}${r.t?' · '+esc(r.t):''}<span style="cursor:pointer;margin-left:auto;opacity:.7" onclick="CP.reh.splice(${i},1);renderReh()">✕</span></div>`).join('')||'<span class="note">还没有排练场次，可添加多次排练</span>'}
+function previewImg(){const el=document.getElementById('imgPreview');if(!el)return;
+ const box=el;const img=box.querySelector('img');
+ if(CP.img){box.style.display='block';img.src=CP.img;}else{box.style.display='none';img.removeAttribute('src');}}
+function readImgFile(input){const f=input.files&&input.files[0];if(!f)return;
+ const r=new FileReader();r.onload=e=>{CP.img=e.target.result;const el=document.getElementById('cImg');if(el)el.value='';previewImg();toast('已从本地选图');};r.readAsDataURL(f);input.value='';}
+function addRecruitTag(){const v=document.getElementById('cRecruitAdd').value.trim();if(!v){toast('输入招募位置');return}
+ CP.recruit=CP.recruit||[];CP.recruit.push(v);document.getElementById('cRecruitAdd').value='';renderRecruit();}
+function renderRecruit(){const el=document.getElementById('cRecruit');el.innerHTML=(CP.recruit||[]).map((r,i)=>`<span class="pill">${esc(r)}<span style="cursor:pointer;opacity:.7;margin-left:3px" onclick="CP.recruit.splice(${i},1);renderRecruit()">✕</span></span>`).join('')||'<span class="note">点击右下角添加招募位置</span>'}
+function addWork(){const t=document.getElementById('cWorkType').value;const v=document.getElementById('cWorkVal').value.trim();if(!v){toast('填写作品名或ID');return}
+ CP.leader.works.push({type:t,v});document.getElementById('cWorkVal').value='';renderWorks();}
+function renderWorks(){document.getElementById('cWorks').innerHTML=CP.leader.works.map((w,i)=>`<div class="work-item">${I.play}${workTypeName(w.type)} · ${esc(w.v)}<span style="cursor:pointer;margin-left:auto;opacity:.7" onclick="CP.leader.works.splice(${i},1);renderWorks()">✕</span></div>`).join('')||'<span class="note">暂未添加作品</span>'}
+/* 团长新建标签：大类/细分名若已存在则复用，否则新建；三级标签必填 */
+function openNewTagModal(){
+ const tr=tree();
+ const l1s=tr.map(l=>l.node?l.name:l.name);
+ const l1Opts=tr.map(l=>`<option>${esc(l.name)}</option>`).join('')||'<option>（暂空，将新建）</option>';
+ const isNew=!tr.length;
+ showModal(`<div class="modal-card">
+  <div class="modal-head"><h3 class="disp">团长新建标签</h3><button class="icon-btn" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+   <p class="note" style="margin-bottom:6px">新建的标签会立即出现在首页，并作为这个舞团的绑定标签。</p>
+   <label class="f-label">大类 ${tr.length?'（选择已有或填新名）':'（必填，如 Kpop）'}</label>
+   <div class="f-field" style="margin-bottom:10px"><select id="ntL1" onchange="document.getElementById('ntL1New').classList.toggle('hidden',this.value!=='__new__')">${tr.map(l=>`<option>${esc(l.name)}</option>`).join('')}<option value="__new__">＋ 新建大类…</option></select></div>
+   <input class="finput hidden" id="ntL1New" placeholder="新大类名，如：Kpop">
+   <label class="f-label">细分 ${tr.length?'（选已有或填新名）':'（选大类后设置，如 女团）'}</label>
+   <div class="f-field" style="margin-bottom:10px"><input class="finput" id="ntL2" placeholder="细分名，如：女团（留空则直接挂大类下）"></div>
+   <label class="f-label">三级标签名 <span class="req">*</span></label>
+   <div class="f-field" style="margin-bottom:10px"><input class="finput" id="ntL3" placeholder="如：IVE / IZONE / NewJeans"></div>
+   <label class="f-label">标签图片 URL <small>选填，粘贴后显示在主页标签卡片</small></label>
+   <div class="f-field"><input class="finput" id="ntImg" placeholder="https://…"></div>
+   <button class="btn btn-pink" style="width:100%;margin-top:16px" onclick="doNewTag()">创建并绑定到我的舞团</button>
+  </div></div>`);
+}
+function doNewTag(){
+ const l1Sel=document.getElementById('ntL1').value;
+ const l1New=document.getElementById('ntL1New').value.trim();
+ const l2=document.getElementById('ntL2').value.trim();
+ const l3=document.getElementById('ntL3').value.trim();
+ const img=document.getElementById('ntImg').value.trim();
+ if(!l3){toast('请填写三级标签名');return}
+ const tr=tree();
+ let l1Node=null;
+ if(l1New){l1Node=tr.find(x=>x.name===l1New)||null;if(!l1Node){l1Node={id:uid('L1'),name:l1New,children:[]};tr.push(l1Node);}}
+ else if(l1Sel&&l1Sel!=='__new__')l1Node=tr.find(x=>x.name===l1Sel);
+ if(!l1Node){toast('请选择或填写大类');return}
+ let l2Node=null;
+ if(l2){l2Node=l1Node.children.find(x=>x.name===l2)||null;if(!l2Node){l2Node={id:uid('L2'),name:l2,children:[]};l1Node.children.push(l2Node);}}
+ const node={id:uid('L3'),name:l3,img:img||''};
+ if(l2Node)l2Node.children.push(node);else l1Node.children.push(node);
+ saveTree(tr);
+ CP.tagId=node.id;
+ closeModal();render();toast('标签已创建并绑定');
+}
+function submitCreate(){
+ const err=document.getElementById('createErr');
+ const name=document.getElementById('cName').value.trim();
+ const tagId=document.getElementById('cTag').value;
+ if(!name){err.style.display='block';err.textContent='请填写团名';scrollTop(err);return}
+ if(!tagId){err.style.display='block';err.textContent='请选择绑定的舞种标签（可点「＋新建标签」自己创建）';scrollTop(err);return}
+ if(!CP.recruit||!CP.recruit.length){err.style.display='block';err.textContent='请至少添加一个招募位置';scrollTop(err);return}
+ const type=CP.type||'录舞';
+ const luS=document.getElementById('cLuS').value;const luE=document.getElementById('cLuE').value;
+ const mainLoc=document.getElementById('cLuL').value.trim()||'待定';
+ const rehLoc=document.getElementById('cPaL').value.trim();
+ const lu={start:luS||'',end:luE||'',loc:mainLoc};
+ const pa={start:'',end:'',loc:rehLoc||mainLoc};
+ const topics={ref:document.getElementById('cTRef').value.trim(),photo:document.getElementById('cTPhoto').value.trim(),venue:document.getElementById('cTVenue').value.trim(),costume:document.getElementById('cTCostume').value.trim(),prop:document.getElementById('cTProp').value.trim(),light:document.getElementById('cTLight').value.trim(),edit:document.getElementById('cTEdit').value.trim()};
+ const join={gender:document.getElementById('cGender').value,makeup:document.getElementById('cMakeup').value,dance:document.getElementById('cDance').value,zero:!!document.getElementById('cZero')&&document.getElementById('cZero').checked};
+ const cn=document.getElementById('cCn').value.trim()||'未命名团长';const contact=document.getElementById('cContact').value.trim()||'见留言板';
+ const id=uid('c');
+ const g={id,name,tagId,type,lu,pa,song:'',days:CP.days,holiday:CP.holiday,img:CP.img||'',show:document.getElementById('cShowT').value.trim()||'',reh:CP.reh||[],topics,join,recruit:CP.recruit.map(t=>({t,open:true})),opt:{},leader:{cn,contact,audit:CP.leader.audit,works:CP.leader.works},desc:document.getElementById('cDesc').value.trim()||'新建舞团，欢迎加入。',t:nowStr(),views:0};
+ const gs=groups();gs.unshift(g);saveGroups(gs);
+ toast('招募发布成功！');location.hash='#/group/'+id;
+}
+function scrollTop(el){el.scrollIntoView({behavior:'smooth',block:'start'})}
+
+/* ============ 管理后台 ============ */
+function adminHTML(){return sessionStorage.getItem('ywb_admin3')?renderAdmin():passcodeHTML();}
+function passcodeHTML(){
+ return `<div class="admin"><div class="admin-card"><h3>管理员登录</h3>
+  <p class="hint-admin">此区域用于运营者搭建标签树、管理全部舞团（增删改）。请输入管理口令进入。</p>
+  <div style="display:flex;gap:10px;margin:14px 0"><input class="finput" id="adminCode" placeholder="输入管理口令" style="flex:1"><button class="btn btn-pink" onclick="adminLogin()">进入</button></div>
+  <div class="hint-admin">口令可在源码中搜索 <code>ADMIN_CODE</code> 自行修改。</div>
+  <button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="location.hash='#/'">返回首页</button></div></div>`;}
+function adminLogin(){const c=(document.getElementById('adminCode')||{}).value||'';if(c===ADMIN_CODE){sessionStorage.setItem('ywb_admin3','1');render();toast('已进入管理后台');}else{toast('口令不正确');}}
+function adminLogout(){sessionStorage.removeItem('ywb_admin3');render();toast('已退出管理');}
+function tagTreeRows(tr){
+ if(!tr.length)return '<div class="hint-admin">还没有标签。先「新增大类」，再在大类下加细分、加三级标签。</div>';
+ let html='';
+ tr.forEach((l1,i1)=>{
+  const up1=i1===0?'style="opacity:.35;pointer-events:none"':'class="good"';
+  const dn1=i1===tr.length-1?'style="opacity:.35;pointer-events:none"':'class="good"';
+  html+=`<div class="tr-l1"><span class="tn">${esc(l1.name)}</span>
+   <span class="mini-act" onclick="addL2('${l1.id}')">＋细分</span><span class="mini-act" onclick="editL1('${l1.id}')">改</span>
+   <span class="mini-act" ${up1} onclick="${i1===0?'':'moveL1('+i1+',-1)'}">${I.up}</span>
+   <span class="mini-act" ${dn1} onclick="${i1===tr.length-1?'':'moveL1('+i1+',1)'}">${I.down}</span>
+   <span class="mini-act danger" onclick="delL1('${l1.id}')">删</span></div>`;
+  (l1.children||[]).forEach((l2,i2)=>{
+   const up2=i2===0?'style="opacity:.35;pointer-events:none"':'class="good"';
+   const dn2=i2===l1.children.length-1?'style="opacity:.35;pointer-events:none"':'class="good"';
+   html+=`<div class="tr-l2"><span class="tn">${esc(l2.name)}</span>
+    <span class="mini-act" onclick="addL3('${l1.id}','${l2.id}')">＋标签</span><span class="mini-act" onclick="editL2('${l1.id}','${l2.id}')">改</span>
+    <span class="mini-act" ${up2} onclick="${i2===0?'':'moveL2(\''+l1.id+'\','+i2+',-1)'}">${I.up}</span>
+    <span class="mini-act" ${dn2} onclick="${i2===l1.children.length-1?'':'moveL2(\''+l1.id+'\','+i2+',1)'}">${I.down}</span>
+    <span class="mini-act danger" onclick="delL2('${l1.id}','${l2.id}')">删</span></div>`;
+   (l2.children||[]).forEach((l3,i3)=>{
+    const up3=i3===0?'style="opacity:.35;pointer-events:none"':'class="good"';
+    const dn3=i3===l2.children.length-1?'style="opacity:.35;pointer-events:none"':'class="good"';
+    html+=`<div class="tr-l3"><span class="tn">${l3.img?'<img class="timg" src="'+l3.img+'" onerror="this.style.opacity=.3">':''}${esc(l3.name)}</span>
+    <span class="mini-act" onclick="editL3('${l1.id}','${l2.id}','${l3.id}')">改图/名</span>
+    <span class="mini-act" ${up3} onclick="${i3===0?'':'moveL3(\''+l1.id+'\',\''+l2.id+'\','+i3+',-1)'}">${I.up}</span>
+    <span class="mini-act" ${dn3} onclick="${i3===l2.children.length-1?'':'moveL3(\''+l1.id+'\',\''+l2.id+'\','+i3+',1)'}">${I.down}</span>
+    <span class="mini-act danger" onclick="delL3('${l1.id}','${l2.id}','${l3.id}')">删</span></div>`;
+   });
+  });
+ });
+ return html;
+}
+function renderAdmin(){
+ const tr=tree();const gs=groups();
+ const treeRows=tagTreeRows(tr);
+ const groupRows=gs.map(g=>{const tg=groupTagOf(g);return `<div class="arow"><div class="an">${esc(g.name)}<div class="at">${tg?esc(tg.l1+' / '+tg.l2+' / '+tg.name):'未绑定标签'} · ${esc(g.lu.loc)} · ${g.type} · 招募 ${g.recruit.length} 个位置${g.ended?' · 已结束':''}</div></div>
+  <div class="acts"><button class="btn btn-ghost btn-sm" onclick="location.hash='#/group/${g.id}'">查看</button><button class="btn btn-ghost btn-sm" onclick="openAdminEdit('${g.id}')">编辑</button><button class="btn btn-pink btn-sm" onclick="adminDelete('${g.id}')">删除</button></div></div>`}).join('');
+ return `<div class="admin"><div class="head"><h1>约舞吧 · 管理后台</h1><div class="acts"><button class="btn btn-ghost btn-sm" onclick="location.hash='#/'">返回首页</button><button class="btn btn-ghost btn-sm" onclick="adminLogout()">退出管理</button></div></div>
+ <div class="admin-card"><h3>${I.star}标签树管理 <span style="color:var(--ink-3);font-size:12px;font-weight:400">大类 → 细分 → 标签</span></h3>
+  <div class="acts" style="margin-bottom:12px"><button class="btn btn-pink btn-sm" onclick="addL1()">＋ 新增大类</button></div>
+  ${treeRows||''}
+  <div class="hint-admin">顺序即主页展示顺序，可用上下箭头调整；删除标签会直接消失（非隐藏）。改动永久保存。</div></div>
+ <div class="admin-card"><h3>${I.users}舞团管理 <span style="color:var(--ink-3);font-size:12px;font-weight:400">共 ${gs.length} 个</span></h3>
+  ${groupRows||'<div class="hint-admin">还没有舞团，可点击「＋新建招募」，或让团长在首页自行发起招募。</div>'}
+  <div class="acts" style="margin-top:12px"><button class="btn btn-pink btn-sm" onclick="location.hash='#/create'">＋新建招募</button></div>
+  <div class="hint-admin">每个舞团绑定一个三级标签，主页点该标签才会刷出来。</div></div>
+ <div class="admin-card"><h3>${I.filter}如何配置</h3>
+  <div class="hint-admin">1. 先建「大类」（如 Kpop）→ 大类下加「细分」（如 女团）→ 细分下加「三级标签」（如 IVE、IZONE）。<br>
+  2. 每个三级标签可粘贴图片 URL，会显示在主页标签卡片上。<br>
+  3. 「舞团管理」新增/编辑/删除舞团，并绑定到你建好的三级标签；类型单选「录舞」或「爬台」；排练日期范围为起止日期，可勾选排练时段与是否节假日；可添加多条排练场次、正式演出时间与选题基础信息（参考视频/摄影/场地等）；可粘贴招募图 URL 作为主页卡片封面。<br>
+  4. 团长可在首页点「创建我的舞团」自行发起招募；没有合适标签时，团长也能点「新建标签」自己建。<br>
+  5. 主页展示的标签与顺序完全由这里配置，删除即永久生效（非隐藏），所有改动保存在 localStorage。</div></div></div>`;}
+function addL1(){promptModal('新增大类',`<input class="finput" id="pm1" placeholder="如：Kpop"><button class="btn btn-pink" style="width:100%;margin-top:12px" onclick="doAddL1()">添加</button>`)}
+function doAddL1(){const n=document.getElementById('pm1').value.trim();if(!n){toast('输入名称');return}const tr=tree();tr.push({id:uid('L1'),name:n,children:[]});saveTree(tr);closeModal();render();toast('已新增大类');}
+function addL2(l1id){promptModal('新增细分',`<input class="finput" id="pm1" placeholder="如：女团"><button class="btn btn-pink" style="width:100%;margin-top:12px" onclick="doAddL2('${l1id}')">添加</button>`)}
+function doAddL2(l1id){const n=document.getElementById('pm1').value.trim();if(!n){toast('输入名称');return}const tr=tree();const f=findNode(tr,l1id);if(f&&f.node.children)f.node.children.push({id:uid('L2'),name:n,children:[]});saveTree(tr);closeModal();render();toast('已新增细分');}
+function addL3(l1id,l2id){promptModal('新增三级标签',`<input class="finput" id="pm1" placeholder="标签名，如：IVE"><div style="margin-top:10px"><input class="finput" id="pm2" placeholder="图片 URL（选填，粘贴链接）"></div><button class="btn btn-pink" style="width:100%;margin-top:12px" onclick="doAddL3('${l1id}','${l2id}')">添加</button>`)}
+function doAddL3(l1id,l2id){const n=document.getElementById('pm1').value.trim();if(!n){toast('输入名称');return}const img=document.getElementById('pm2').value.trim();const tr=tree();const f1=findNode(tr,l1id);const l2=f1&&f1.node.children.find(x=>x.id===l2id);if(l2)l2.children.push({id:uid('L3'),name:n,img});saveTree(tr);closeModal();render();toast('已新增标签');}
+function editL1(id){const f=findNode(tree(),id);promptModal('修改大类',`<input class="finput" id="pm1" value="${escAttr(f.node.name)}"><button class="btn btn-pink" style="width:100%;margin-top:12px" onclick="doEditL1('${id}')">保存</button>`)}
+function doEditL1(id){const n=document.getElementById('pm1').value.trim();if(!n){toast('输入名称');return}const tr=tree();const f=findNode(tr,id);f.node.name=n;saveTree(tr);closeModal();render();toast('已修改');}
+function editL2(l1id,id){const f=findNode(tree(),id);promptModal('修改细分',`<input class="finput" id="pm1" value="${escAttr(f.node.name)}"><button class="btn btn-pink" style="width:100%;margin-top:12px" onclick="doEditL2('${l1id}','${id}')">保存</button>`)}
+function doEditL2(l1id,id){const n=document.getElementById('pm1').value.trim();if(!n){toast('输入名称');return}const tr=tree();const f=findNode(tr,id);f.node.name=n;saveTree(tr);closeModal();render();toast('已修改');}
+function editL3(l1id,l2id,id){const f=findNode(tree(),id);const node=f.node;promptModal('修改标签',`<input class="finput" id="pm1" value="${escAttr(node.name)}" placeholder="标签名"><div style="margin-top:10px"><input class="finput" id="pm2" value="${escAttr(node.img||'')}" placeholder="图片 URL（选填）"></div><button class="btn btn-pink" style="width:100%;margin-top:12px" onclick="doEditL3('${l1id}','${l2id}','${id}')">保存</button>`)}
+function doEditL3(l1id,l2id,id){const n=document.getElementById('pm1').value.trim();if(!n){toast('输入名称');return}const img=document.getElementById('pm2').value.trim();const tr=tree();const f=findNode(tr,id);f.node.name=n;f.node.img=img;saveTree(tr);closeModal();render();toast('已修改');}
+function delL1(id){if(!confirm('删除该大类及其下所有标签？此操作不可恢复。'))return;saveTree(tree().filter(x=>x.id!==id));render();toast('已删除');}
+function delL2(l1id,id){if(!confirm('删除该细分及其下所有标签？'))return;const tr=tree();const f=findNode(tr,l1id);f.node.children=f.node.children.filter(x=>x.id!==id);saveTree(tr);render();toast('已删除');}
+function delL3(l1id,l2id,id){if(!confirm('删除该标签？此操作不可恢复。'))return;const tr=tree();const f1=findNode(tr,l1id);const l2=f1.node.children.find(x=>x.id===l2id);l2.children=l2.children.filter(x=>x.id!==id);saveTree(tr);render();toast('已删除');}
+function moveL1(i,dir){const tr=tree();const j=i+dir;if(j<0||j>=tr.length)return;[tr[i],tr[j]]=[tr[j],tr[i]];saveTree(tr);render();}
+function moveL2(l1id,i,dir){const tr=tree();const f=findNode(tr,l1id);const arr=f.node.children;const j=i+dir;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];saveTree(tr);render();}
+function moveL3(l1id,l2id,i,dir){const tr=tree();const f1=findNode(tr,l1id);const l2=f1.node.children.find(x=>x.id===l2id);const arr=l2.children;const j=i+dir;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];saveTree(tr);render();}
+function promptModal(title,body){showModal(`<div class="modal-card"><div class="modal-head"><h3>${title}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body">${body}</div></div>`)}
+
+/* 舞团编辑 */
+function openAdminEdit(id){
+ const g=groups().find(x=>x.id===id);if(!g)return;
+ const tr=tree();const leafs=leafList(tr);
+ const tagOpts=leafs.map(l=>`<option value="${l.node.id}" ${g.tagId===l.node.id?'selected':''}>${esc(l.l1)} / ${esc(l.l2)} / ${esc(l.node.name)}</option>`).join('');
+ const j=g.join||{gender:'不限',makeup:'不需要',dance:'不需要',zero:false};
+ const tp=g.topics||{};
+ promptModal(`编辑舞团 · ${esc(g.name)}`,`
+  <label class="f-label">团名</label><input class="finput" id="aeName" value="${esc(g.name)}">
+  <label class="f-label">绑定标签</label><select class="finput" id="aeTag">${tagOpts}</select>
+  <label class="f-label">类型（单选）</label><select class="finput" id="aeType">${TYPES.map(t=>`<option ${g.type===t?'selected':''}>${t}</option>`).join('')}</select>
+  <label class="f-label">招募图 URL（卡片封面）</label><input class="finput" id="aeImg" value="${esc(g.img||'')}" placeholder="https://…">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px"><div class="f-field"><div class="f-label">排练开始</div><input type="date" class="finput" id="aeLuS" value="${esc(g.lu&&g.lu.start||'')}"></div><div class="f-field"><div class="f-label">排练结束</div><input type="date" class="finput" id="aeLuE" value="${esc(g.lu&&g.lu.end||'')}"></div></div>
+  <div class="f-field"><div class="f-label">${g.type==='爬台'?'爬台地点':'录舞地点'}</div><input class="finput" id="aeLuL" value="${esc(g.lu.loc)}"></div>
+  <div class="f-field"><div class="f-label">排练地点（选填，不同则填）</div><input class="finput" id="aePaL" value="${esc(g.pa?g.pa.loc:'')}"></div>
+  <div class="f-field"><div class="f-label">正式演出时间（选填）</div><input class="finput" id="aeShow" value="${esc(g.show||'')}" placeholder="如：2026-07-01 下午场"></div>
+  <div class="f-field"><div class="f-label">排练场次（每行：日期|时间段）</div><textarea class="finput" id="aeReh" rows="3">${(g.reh||[]).map(r=>r.d+(r.t?'|'+r.t:'')).join('\n')}</textarea></div>
+  <div class="f-field"><div class="f-label">排练时段（可多选，逗号分隔）</div><input class="finput" id="aeDays" value="${esc((g.days||[]).join('、'))}" placeholder="如：周末、节假日"></div>
+  <div class="toggle-row"><span class="tlabel">仅节假日排练</span><label class="switch"><input type="checkbox" id="aeHoliday" ${g.holiday?'checked':''}><span class="slider"></span></label></div>
+  <div class="f-field"><div class="f-label">选题·参考视频/编舞</div><input class="finput" id="aeTRef" value="${esc(tp.ref||'')}"></div>
+  <div class="f-field"><div class="f-label">选题·摄影</div><input class="finput" id="aeTPhoto" value="${esc(tp.photo||'')}"></div>
+  <div class="f-field"><div class="f-label">选题·场地</div><input class="finput" id="aeTVenue" value="${esc(tp.venue||'')}"></div>
+  <div class="f-field"><div class="f-label">选题·服装妆造</div><input class="finput" id="aeTCostume" value="${esc(tp.costume||'')}"></div>
+  <div class="f-field"><div class="f-label">选题·道具</div><input class="finput" id="aeTProp" value="${esc(tp.prop||'')}"></div>
+  <div class="f-field"><div class="f-label">选题·灯光</div><input class="finput" id="aeTLight" value="${esc(tp.light||'')}"></div>
+  <div class="f-field"><div class="f-label">选题·后期剪辑</div><input class="finput" id="aeTEdit" value="${esc(tp.edit||'')}"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+   <div class="f-field"><div class="f-label">性别</div><select class="finput" id="aeGen">${['不限','仅女生','仅男生'].map(x=>`<option ${j.gender===x?'selected':''}>${x}</option>`).join('')}</select></div>
+   <div class="f-field"><div class="f-label">审妆</div><select class="finput" id="aeMake">${['不需要','需要'].map(x=>`<option ${j.makeup===x?'selected':''}>${x}</option>`).join('')}</select></div>
+   <div class="f-field"><div class="f-label">审舞</div><select class="finput" id="aeDance">${['不需要','需要'].map(x=>`<option ${j.dance===x?'selected':''}>${x}</option>`).join('')}</select></div>
+  </div>
+  <div class="f-field"><div class="f-label">招募位置（每行一个）</div><textarea class="finput" id="aeRecruit" rows="4">${g.recruit.map(r=>r.t).join('\n')}</textarea></div>
+  <div class="toggle-row"><span class="tlabel">零基础可来</span><label class="switch"><input type="checkbox" id="aeZero" ${j.zero?'checked':''}><span class="slider"></span></label></div>
+  <div class="f-field"><div class="f-label">团长 CN</div><input class="finput" id="aeCn" value="${esc(g.leader.cn)}"></div>
+  <div class="f-field"><div class="f-label">联系方式</div><input class="finput" id="aeContact" value="${esc(g.leader.contact)}"></div>
+  <div class="f-field"><div class="f-label">团简介</div><textarea class="finput" id="aeDesc" rows="3">${esc(g.desc||'')}</textarea></div>
+  <button class="btn btn-pink" style="width:100%;margin-top:16px" onclick="adminSave('${id}')">保存修改</button>`);}
+function adminSave(id){
+ const gs=groups();const g=gs.find(x=>x.id===id);if(!g)return;
+ let recruit=document.getElementById('aeRecruit').value.split('\n').map(s=>s.trim()).filter(Boolean).map(t=>({t,open:true}));
+ if(!recruit.length)recruit=g.recruit;
+ g.name=document.getElementById('aeName').value.trim()||g.name;
+ g.tagId=document.getElementById('aeTag').value;
+ g.type=document.getElementById('aeType').value;
+ g.img=document.getElementById('aeImg').value.trim();
+ const luS=document.getElementById('aeLuS').value,luE=document.getElementById('aeLuE').value;
+ g.lu={start:luS,end:luE,loc:document.getElementById('aeLuL').value.trim()||'待定'};
+ g.pa={start:'',end:'',loc:document.getElementById('aePaL').value.trim()};
+ g.show=document.getElementById('aeShow').value.trim();
+ const rehLines=document.getElementById('aeReh').value.split('\n').map(s=>s.trim()).filter(Boolean);
+ g.reh=rehLines.map(l=>{const p=l.split('|');return{d:p[0].trim(),t:(p[1]||'').trim()}});
+ g.topics={ref:document.getElementById('aeTRef').value.trim(),photo:document.getElementById('aeTPhoto').value.trim(),venue:document.getElementById('aeTVenue').value.trim(),costume:document.getElementById('aeTCostume').value.trim(),prop:document.getElementById('aeTProp').value.trim(),light:document.getElementById('aeTLight').value.trim(),edit:document.getElementById('aeTEdit').value.trim()};
+ const daysStr=document.getElementById('aeDays').value;
+ g.days=daysStr?daysStr.split(/[、,，]/).map(s=>s.trim()).filter(Boolean):[];
+ g.holiday=!!document.getElementById('aeHoliday').checked;
+ g.join={gender:document.getElementById('aeGen').value,makeup:document.getElementById('aeMake').value,dance:document.getElementById('aeDance').value,zero:!!document.getElementById('aeZero').checked};
+ g.recruit=recruit;
+ g.leader.cn=document.getElementById('aeCn').value.trim()||g.leader.cn;
+ g.leader.contact=document.getElementById('aeContact').value.trim();
+ g.desc=document.getElementById('aeDesc').value.trim();
+ saveGroups(gs);closeModal();render();toast('已保存');}
+function adminDelete(id){if(!confirm('确认删除该舞团？此操作不可恢复。'))return;saveGroups(groups().filter(x=>x.id!==id));render();toast('已删除');}
+
+/* ============ 工具 ============ */
+function nowStr(){const d=new Date();const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`}
+let toastTimer;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
+
+window.addEventListener('hashchange',render);
+render();
+</script>
+</body>
+</html>
