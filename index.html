@@ -324,6 +324,7 @@ input[type=range]{flex:1;accent-color:var(--blue);height:6px}
 <button class="btn btn-pink filter-fab" id="filterFab" onclick="toggleSheet(true)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg> 筛选 <span class="cnt" id="filterCnt" style="display:none">0</span></button>
 <div class="modal" id="modal"></div>
 
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/3.10.4/cloudbase.full.js" onerror="console.warn('cloudbase sdk 加载失败，将以本地模式运行')"></script>
 <script>
 /* ============ 图标 ============ */
 const I0={
@@ -346,15 +347,25 @@ const I=I0;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const escAttr=s=>esc(s).replace(/"/g,'&quot;');
 
-/* ============ 数据存储（全部在 localStorage，初始为空） ============ */
+/* ============ 数据存储：localStorage 本地 + 腾讯云开发云数据库（实时共享） ============ */
 const K_TREE='ywb_tree3';
 const K_GROUPS='ywb_groups3';
 const K_APPLIES='ywb_applies3';
 const K_HMSG='ywb_hmsg3';
 const K_GMSG='ywb_gmsg3';
 const ADMIN_CODE='约舞888';
-const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+/* 云数据库接入：把下面 CLOUD_ENV 替换成你的腾讯云开发环境 ID（形如 yuewu-xxxxx）。
+   环境 ID 在 腾讯云控制台 → 云开发 CloudBase → 环境管理 中复制。
+   留空或保持占位时，网站以「本地模式」运行（数据只存在当前浏览器）。
+   若环境不在上海地域，把 CLOUD_REGION 改为 ap-guangzhou（广州）或 ap-singapore（新加坡）。 */
+const CLOUD_ENV='__CLOUDBASE_ENV__';
+const CLOUD_REGION='';
+const MEM={};
+const CLOUD={ready:false,db:null,ids:{groups:new Set(),applies:new Set(),gmsg:new Set()}};
+const lsStore=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const lsLoad=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const store=(k,v)=>{MEM[k]=v;lsStore(k,v);if(CLOUD.ready)pushCloud(k,v)};
+const load=(k,d)=>{if(!(k in MEM))MEM[k]=lsLoad(k,d);return MEM[k]};
 const tree=()=>load(K_TREE,[]);
 const saveTree=t=>store(K_TREE,t);
 const groups=()=>load(K_GROUPS,[]);
@@ -702,7 +713,7 @@ function doApply(gid){const pos=document.getElementById('apPos').value;const cn=
  if(!cn){toast('请填写你的 CN');return}
  const works=document.getElementById('apWorks').value.trim();
  const applies=load(K_APPLIES,[]);if(applies.some(a=>a.g===gid&&a.t===pos)){toast('这个位置你已经报过啦');closeModal();return}
- applies.push({g:gid,t:pos,cn,works,time:nowStr()});store(K_APPLIES,applies);closeModal();render();toast('报名成功，团长确认后会通知你');}
+ applies.push({g:gid,t:pos,cn,works,time:nowStr(),id:uid('a')});store(K_APPLIES,applies);closeModal();render();toast('报名成功，团长确认后会通知你');}
 function openShareModal(gid){const g=groups().find(x=>x.id===gid);if(!g)return;
  const tg=groupTagOf(g);
  showModal(`<div class="modal-card">
@@ -1087,8 +1098,82 @@ function nowStr(){const d=new Date();const p=n=>String(n).padStart(2,'0');return
 let toastTimer;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
 
+/* ============ 云数据库实时同步（腾讯云开发 CloudBase） ============ */
+/* 数据集合映射：
+   tree → 集合 tree（单文档 _id='tree'，存整棵标签树）
+   groups → 集合 groups（每个舞团一个文档，_id=舞团id）
+   applies → 集合 applies（每个报名一个文档）
+   hmsg → 集合 hmsg（单文档 _id='all'，存首页留言数组）
+   gmsg → 集合 gmsg（每个舞团一个文档，_id=舞团id，存该团留言数组） */
+function snapData(d){
+ if(!d)return null;
+ if(d.data&&typeof d.data==='function')return d.data();
+ if(d.data&&typeof d.data==='object')return d.data;
+ return d;
+}
+function cloudOK(){return CLOUD.ready&&typeof cloudbase!=='undefined'}
+async function pushCloud(k,v){
+ if(!cloudOK())return;
+ try{
+  const db=CLOUD.db;
+  if(k===K_TREE){await db.collection('tree').doc('tree').set({data:v});}
+  else if(k===K_GROUPS){
+   const col=db.collection('groups');
+   for(const g of v){await col.doc(g.id).set(g);}
+   for(const id of CLOUD.ids.groups){if(!v.some(g=>g.id===id)){await col.doc(id).remove();}}
+   CLOUD.ids.groups=new Set(v.map(g=>g.id));
+  }
+  else if(k===K_APPLIES){
+   const col=db.collection('applies');
+   for(const a of v){await col.doc(a.id||(a.g+'_'+a.t+'_'+a.cn)).set(a);}
+   for(const id of CLOUD.ids.applies){if(!v.some(a=>(a.id||(a.g+'_'+a.t+'_'+a.cn))===id)){await col.doc(id).remove();}}
+   CLOUD.ids.applies=new Set(v.map(a=>a.id||(a.g+'_'+a.t+'_'+a.cn)));
+  }
+  else if(k===K_HMSG){await db.collection('hmsg').doc('all').set({data:v});}
+  else if(k===K_GMSG){
+   const col=db.collection('gmsg');
+   for(const [gid,arr] of Object.entries(v)){await col.doc(gid).set({data:arr});}
+   for(const id of CLOUD.ids.gmsg){if(!(id in v)){await col.doc(id).remove();}}
+   CLOUD.ids.gmsg=new Set(Object.keys(v));
+  }
+ }catch(e){console.warn('云写入失败',e)}
+}
+async function cloudPullAll(){
+ const db=CLOUD.db;
+ try{const t=await db.collection('tree').doc('tree').get();const td=snapData(t);if(td&&td.data!==undefined){MEM[K_TREE]=td.data;lsStore(K_TREE,td.data);}}catch(e){}
+ try{const r=await db.collection('groups').get();if(r.data&&r.data.length){MEM[K_GROUPS]=r.data.map(d=>snapData(d));lsStore(K_GROUPS,MEM[K_GROUPS]);CLOUD.ids.groups=new Set(r.data.map(d=>d._id));}}catch(e){}
+ try{const r=await db.collection('applies').get();if(r.data&&r.data.length){MEM[K_APPLIES]=r.data.map(d=>snapData(d));lsStore(K_APPLIES,MEM[K_APPLIES]);CLOUD.ids.applies=new Set(r.data.map(d=>d._id));}}catch(e){}
+ try{const h=await db.collection('hmsg').doc('all').get();const hd=snapData(h);if(hd&&hd.data!==undefined){MEM[K_HMSG]=hd.data;lsStore(K_HMSG,hd.data);}}catch(e){}
+ try{const r=await db.collection('gmsg').get();if(r.data&&r.data.length){const obj={};r.data.forEach(d=>{obj[d._id]=snapData(d).data||[]});MEM[K_GMSG]=obj;lsStore(K_GMSG,obj);CLOUD.ids.gmsg=new Set(r.data.map(d=>d._id));}}catch(e){}
+}
+function cloudWatchAll(){
+ const db=CLOUD.db;let rt=null;
+ const dr=()=>{clearTimeout(rt);rt=setTimeout(()=>{try{render()}catch(e){}},120)};
+ try{db.collection('tree').doc('tree').watch({onChange:s=>{const d=s.docs&&s.docs[0];const dd=snapData(d);if(dd&&dd.data!==undefined){MEM[K_TREE]=dd.data;lsStore(K_TREE,dd.data);dr();}},onError:e=>console.warn('watch tree',e)});}catch(e){}
+ try{db.collection('groups').watch({onChange:s=>{if(s.docs){const arr=s.docs.map(d=>snapData(d));MEM[K_GROUPS]=arr;lsStore(K_GROUPS,arr);CLOUD.ids.groups=new Set(s.docs.map(d=>d._id));dr();}},onError:e=>console.warn('watch groups',e)});}catch(e){}
+ try{db.collection('applies').watch({onChange:s=>{if(s.docs){const arr=s.docs.map(d=>snapData(d));MEM[K_APPLIES]=arr;lsStore(K_APPLIES,arr);CLOUD.ids.applies=new Set(s.docs.map(d=>d._id));dr();}},onError:e=>console.warn('watch applies',e)});}catch(e){}
+ try{db.collection('hmsg').doc('all').watch({onChange:s=>{const d=s.docs&&s.docs[0];const dd=snapData(d);if(dd&&dd.data!==undefined){MEM[K_HMSG]=dd.data;lsStore(K_HMSG,dd.data);dr();}},onError:e=>console.warn('watch hmsg',e)});}catch(e){}
+ try{db.collection('gmsg').watch({onChange:s=>{if(s.docs){const obj={};s.docs.forEach(d=>{obj[d._id]=snapData(d).data||[]});MEM[K_GMSG]=obj;lsStore(K_GMSG,obj);CLOUD.ids.gmsg=new Set(s.docs.map(d=>d._id));dr();}},onError:e=>console.warn('watch gmsg',e)});}catch(e){}
+}
+async function initCloud(){
+ if(typeof cloudbase==='undefined')return;
+ const env=(CLOUD_ENV||'').trim();
+ if(!env||env.indexOf('__')===0){console.log('未配置云环境ID，本地模式运行');return}
+ try{
+  const app=cloudbase.init({env,region:CLOUD_REGION||undefined});
+  const lg=await app.auth.signInAnonymously();
+  if(lg&&lg.error)throw lg.error;
+  CLOUD.db=app.database();CLOUD.ready=true;
+  await cloudPullAll();
+  try{render()}catch(e){}
+  cloudWatchAll();
+  toast('已连接云数据库，实时同步开启');
+ }catch(e){console.warn('云数据库初始化失败，本地模式运行',e)}
+}
+
 window.addEventListener('hashchange',render);
 render();
+initCloud();
 </script>
 </body>
 </html>
